@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Tournament.hpp"
 
-static void	initMessage() {
+static void	mainMessage() {
 	std::cout << "########################################\n";
 	std::cout << "USJM Badminton: Programme pour tournois\n";
 	std::cout << "Version: " << VERSION << '\n';
@@ -11,6 +11,6 @@ static void	initMessage() {
 int	main() {
 	Tournament	tournament;
 
-	initMessage();
-	tournament.init();
+	mainMessage();
+	tournament.savePlayers();
 }

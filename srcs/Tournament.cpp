@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 #include "utils.hpp"
 #include "Tournament.hpp"
 
@@ -11,12 +12,15 @@ Tournament::~Tournament() {
 		delete (*it).second;
 }
 
-void	Tournament::init() {
+void	Tournament::savePlayers() {
 	std::string	buffer;
 
-	std::cout << "Entrez le nom des joueurs participant au tournoi\n";
-	std::cout << "Si vous souhaitez enlever un participant retapez son nom avec le signe \'-\' devant celui-ci.\n";
-	std::cout << "Une fois terminé, tapez \"FIN\"." << std::endl;
+	// Enregistrer tous les joueurs qui participeront au match
+	if (this->getNumberOfPlayers() == 0) {
+		std::cout << "Entrez le nom des joueurs participant au tournoi\n";
+		std::cout << "Si vous souhaitez enlever un participant retapez son nom avec le signe \'-\' devant celui-ci.\n";
+		std::cout << "Une fois terminé, tapez \"FIN\"." << std::endl;
+	}
 	while (std::getline(std::cin, buffer)) {
 		if (buffer.empty() || buffer.size() == 0 || isStringEmpty(buffer))
 			continue ;
@@ -31,7 +35,23 @@ void	Tournament::init() {
 			this->addPlayer(buffer);
 	}
 	std::cout << std::endl;
+	if (this->getNumberOfPlayers() <= 1) {
+		printMessage("Pas assez de joueurs inscrits pour lancer le tournoi.", ERROR);
+		exit(EXIT_FAILURE);
+	}
 	this->showPlayers();
+
+	buffer.clear();
+	std::cout << "Y-a t'il une erreur dans la liste? (O/N)" << std::endl;
+	while (std::getline(std::cin, buffer)) {
+		if (buffer.compare("O") == 0) {
+			std::cout << "Si vous souhaitez enlever un participant retapez son nom avec le signe \'-\' devant celui-ci.\n";
+			std::cout << "Pour en rajouter, tapez juste son nom. Entrez \'FIN\' une fois les modifications terminées." << std::endl;
+			return savePlayers();
+		}
+		else if (buffer.compare("N") == 0)
+			break ;
+	}
 }
 
 void	Tournament::addPlayer(const std::string name) {
@@ -58,5 +78,9 @@ void	Tournament::showPlayers() {
 	for (it = this->_playersList.begin(); it != this->_playersList.end(); it++)
 		std::cout << "- " << (*it).first << '\n';
 
-	std::cout << "Nombre total de joueurs: " << this->_playersList.size() << '\n' << std::endl;
+	std::cout << "Nombre total de joueurs: " << this->getNumberOfPlayers() << '\n' << std::endl;
+}
+
+unsigned int	Tournament::getNumberOfPlayers() const {
+	return this->_playersList.size();
 }

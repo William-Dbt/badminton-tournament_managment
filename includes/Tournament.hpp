@@ -12,11 +12,13 @@ class   Tournament {
 		Tournament();
 		~Tournament();
 
-		void	init();
+		void	savePlayers();
 
 		void	addPlayer(const std::string name);
 		void	removePlayer(const std::string name);
 		void	showPlayers();
+
+		unsigned int	getNumberOfPlayers() const;
 
 	private:
 		std::map<const std::string, Player*>	_playersList;

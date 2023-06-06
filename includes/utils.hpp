@@ -1,6 +1,8 @@
 #ifndef __UTILS_HPP__
 # define __UTILS_HPP__
 
+# include <string>
+
 enum messageType {
 	WARNING,
 	ERROR
