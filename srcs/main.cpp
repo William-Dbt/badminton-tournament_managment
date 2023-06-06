@@ -1,6 +1,8 @@
 #include <iostream>
 #include "Tournament.hpp"
 
+bool	g_bTournamentRunning = true;
+
 static void	mainMessage() {
 	std::cout << "########################################\n";
 	std::cout << "USJM Badminton: Programme pour tournois\n";
@@ -13,4 +15,9 @@ int	main() {
 
 	mainMessage();
 	tournament.savePlayers();
+	tournament.askCourtsNumber();
+	while (g_bTournamentRunning)
+		tournament.run();
+
+	return 0;
 }

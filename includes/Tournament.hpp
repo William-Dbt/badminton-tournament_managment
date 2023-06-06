@@ -13,6 +13,9 @@ class   Tournament {
 		~Tournament();
 
 		void	savePlayers();
+		void	askCourtsNumber();
+
+		void	run();
 
 		void	addPlayer(const std::string name);
 		void	removePlayer(const std::string name);
@@ -20,7 +23,15 @@ class   Tournament {
 
 		unsigned int	getNumberOfPlayers() const;
 
+		std::map<const std::string, Player*>&	getPlayersList();
+
 	private:
+		struct s_infos {
+			unsigned int	nbCourts;
+		};
+
+		struct s_infos	_infos;
+
 		std::map<const std::string, Player*>	_playersList;
 };
 

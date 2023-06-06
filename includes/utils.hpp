@@ -10,5 +10,7 @@ enum messageType {
 
 void	printMessage(const std::string message, const int type = -1);
 bool	isStringEmpty(std::string buffer);
+bool	isOui(std::string buffer);
+bool	isNon(std::string buffer);
 
 #endif
