@@ -5,6 +5,7 @@
 
 # include <string>
 # include <map>
+# include <vector>
 # include "Player.hpp"
 
 class   Tournament {
@@ -15,11 +16,17 @@ class   Tournament {
 		void	savePlayers();
 		void	askCourtsNumber();
 
-		void	run();
+		void	initFirstMatchs();
 
 		void	addPlayer(const std::string name);
 		void	removePlayer(const std::string name);
 		void	showPlayers();
+
+		void	addMatch(Player* player1, Player* player2);
+		bool	isPlayerInWaitingQueue(Player* player);
+		void	addPlayerToWaitingQueue(Player* player);
+		void	removePlayerFromWaitingQueue(Player* player);
+		void	showMatchs();
 
 		unsigned int	getNumberOfPlayers() const;
 
@@ -32,7 +39,9 @@ class   Tournament {
 
 		struct s_infos	_infos;
 
-		std::map<const std::string, Player*>	_playersList;
+		std::map<const std::string, Player*>		_playersList;
+		std::vector< std::pair<Player*, Player*> >	_matchsInProgress;
+		std::vector<Player*>						_waitingQueue;
 };
 
 #endif

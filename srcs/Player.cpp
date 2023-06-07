@@ -3,7 +3,7 @@
 #include "utils.hpp"
 #include "Player.hpp"
 
-Player::Player(const std::string name) : _status(WAITING), _name(name) {}
+Player::Player(const std::string name) : _status(-1), _name(name) {}
 
 Player::~Player() {}
 
@@ -20,10 +20,11 @@ bool	Player::hasAlreadyPlayAgainst(Player* player) {
 	return false;
 }
 
-void	Player::initMatch(Player* secondPlayer) {
+void	Player::initMatch(Tournament* tournament, Player* secondPlayer) {
 	this->_status = INGAME;
 	secondPlayer->setStatus(INGAME);
 	printMessage("Match trouvé entre " + this->_name + " et " + secondPlayer->getName() + "!");
+	tournament->addMatch(this, secondPlayer);
 }
 
 void	Player::findMatch(Tournament* tournament) {
@@ -31,19 +32,19 @@ void	Player::findMatch(Tournament* tournament) {
 	std::map<const std::string, Player*>::iterator	it;
 
 	for (it = playersList.begin(); it != playersList.end(); it++) {
-		if (this->_status != WAITING)
+		if (this->_status != WAITING && this->_status != -1)
 			break ;
 
 		if ((*it).second == this)
 			continue ;
 
-		if ((*it).second->getStatus() != WAITING)
+		if ((*it).second->getStatus() != WAITING && (*it).second->getStatus() != -1)
 			continue ;
 
 		if (hasAlreadyPlayAgainst((*it).second))
 			continue ;
 
-		this->initMatch((*it).second);
+		this->initMatch(tournament, (*it).second);
 	}
 }
 

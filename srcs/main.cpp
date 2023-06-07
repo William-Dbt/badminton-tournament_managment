@@ -1,7 +1,9 @@
 #include <iostream>
+#include <unistd.h>
+#include "utils.hpp"
 #include "Tournament.hpp"
 
-bool	g_bTournamentRunning = true;
+// bool	g_bTournamentRunning = true;
 
 static void	mainMessage() {
 	std::cout << "########################################\n";
@@ -16,8 +18,16 @@ int	main() {
 	mainMessage();
 	tournament.savePlayers();
 	tournament.askCourtsNumber();
-	while (g_bTournamentRunning)
-		tournament.run();
+
+	printMessage("\nLancement du tournoi dans 5 seconds!");
+	for (int i = 5; i > 0; i--) {
+		std::cout << i << "...\n";
+		sleep(1);
+	}
+	std::cout << "Que les matchs commencent!\n" << std::endl;
+
+	tournament.initFirstMatchs();
+	tournament.showMatchs();
 
 	return 0;
 }

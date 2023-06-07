@@ -18,7 +18,7 @@ class   Player {
 		~Player();
 
 		bool	hasAlreadyPlayAgainst(Player* player);
-		void	initMatch(Player* player);
+		void	initMatch(Tournament* tournament, Player* player);
 		void	findMatch(Tournament* tournament);
 
 		void    setName(const std::string& name);
