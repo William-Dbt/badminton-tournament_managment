@@ -15,6 +15,7 @@ class   Tournament {
 
 		void	savePlayers();
 		void	askCourtsNumber();
+		bool	isCourtsFull();
 
 		void	initFirstMatchs();
 
@@ -23,13 +24,13 @@ class   Tournament {
 		void	showPlayers();
 
 		void	addMatch(Player* player1, Player* player2);
+		void	showMatchs();
+
 		bool	isPlayerInWaitingQueue(Player* player);
 		void	addPlayerToWaitingQueue(Player* player);
 		void	removePlayerFromWaitingQueue(Player* player);
-		void	showMatchs();
 
-		unsigned int	getNumberOfPlayers() const;
-
+		unsigned int							getNumberOfPlayers() const;
 		std::map<const std::string, Player*>&	getPlayersList();
 
 	private:

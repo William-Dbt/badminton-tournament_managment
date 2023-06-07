@@ -91,6 +91,17 @@ void	Tournament::askCourtsNumber() {
 		else
 			printMessage("Vous pouvez répondre uniquement avec oui (O/OUI/oui) ou non (N/NON/non).", WARNING);
 	}
+	if (this->_infos.nbCourts < 1) {
+		printMessage("Pas assez de terrains disponible pour lancer le tournoi.", ERROR);
+		exit(EXIT_FAILURE);
+	}
+}
+
+bool	Tournament::isCourtsFull() {
+	if (this->_matchsInProgress.size() >= this->_infos.nbCourts)
+		return true;
+
+	return false;
 }
 
 void	Tournament::initFirstMatchs() {
@@ -194,7 +205,7 @@ void	Tournament::showMatchs() {
 	else {
 		std::cout << "Liste des matchs en cours:\n";
 		for (it = this->_matchsInProgress.begin(); it != this->_matchsInProgress.end(); it++) {
-			std::cout << '\t' << (*it).first->getName() << " contre " << (*it).second->getName() << ".\n";
+			std::cout << '\t' << (*it).first->getName() << " contre " << (*it).second->getName() << '\n';
 		}
 	}
 	std::cout << std::endl;
@@ -203,7 +214,7 @@ void	Tournament::showMatchs() {
 	else {
 		std::cout << "Liste des joueurs en attente:\n";
 		for (itQueue = this->_waitingQueue.begin(); itQueue != this->_waitingQueue.end(); itQueue++)
-			std::cout << '\t' << (*itQueue)->getName() << ".\n";
+			std::cout << "\t- " << (*itQueue)->getName() << '\n';
 	}
 	std::cout << "----------------------------------------" << std::endl;
 }

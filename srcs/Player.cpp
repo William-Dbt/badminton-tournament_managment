@@ -31,6 +31,9 @@ void	Player::findMatch(Tournament* tournament) {
 	std::map<const std::string, Player*>&			playersList = tournament->getPlayersList();
 	std::map<const std::string, Player*>::iterator	it;
 
+	if (tournament->isCourtsFull())
+		return ;
+
 	for (it = playersList.begin(); it != playersList.end(); it++) {
 		if (this->_status != WAITING && this->_status != -1)
 			break ;
