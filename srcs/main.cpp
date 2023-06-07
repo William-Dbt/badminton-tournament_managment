@@ -3,8 +3,6 @@
 #include "utils.hpp"
 #include "Tournament.hpp"
 
-// bool	g_bTournamentRunning = true;
-
 static void	mainMessage() {
 	std::cout << "########################################\n";
 	std::cout << "USJM Badminton: Programme pour tournois\n";
@@ -19,15 +17,15 @@ int	main() {
 	tournament.savePlayers();
 	tournament.askCourtsNumber();
 
-	printMessage("\nLancement du tournoi dans 5 seconds!");
+	printMessage("\nLancement du tournoi!");
 	for (int i = 5; i > 0; i--) {
 		std::cout << i << "...\n";
 		sleep(1);
 	}
-	std::cout << "Que les matchs commencent!\n" << std::endl;
+	printMessage("Que les matchs commencent!\n");
 
 	tournament.initFirstMatchs();
 	tournament.showMatchs();
-
+	tournament.managment();
 	return 0;
 }

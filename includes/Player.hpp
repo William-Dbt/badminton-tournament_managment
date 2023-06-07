@@ -18,8 +18,12 @@ class   Player {
 		~Player();
 
 		bool	hasAlreadyPlayAgainst(Player* player);
+		void	addToListAlreadyPlayed(Player* player);
+
 		void	initMatch(Tournament* tournament, Player* player);
 		void	findMatch(Tournament* tournament);
+
+		void	addScoreMatch(std::string opponent, std::pair<int, int> score);
 
 		void    setName(const std::string& name);
 		void	setStatus(const int status);
@@ -30,9 +34,10 @@ class   Player {
 		bool	operator==(const Player& ref) const;
 
 	private:
-		int						_status;
-		std::string 			_name;
-		std::vector<Player*>	_listPlayersAlreadyPlayed;
+		int															_status;
+		std::string 												_name;
+		std::vector<Player*>										_listPlayersAlreadyPlayed;
+		std::vector< std::pair<std::string, std::pair<int, int> > >	_scoreHistory;
 };
 
 # include "Tournament.hpp"

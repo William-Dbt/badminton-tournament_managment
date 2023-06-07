@@ -20,6 +20,16 @@ bool	Player::hasAlreadyPlayAgainst(Player* player) {
 	return false;
 }
 
+void	Player::addToListAlreadyPlayed(Player* player) {
+	if (player == NULL)
+		return ;
+
+	if (this->hasAlreadyPlayAgainst(player))
+		return ;
+
+	this->_listPlayersAlreadyPlayed.push_back(player);
+}
+
 void	Player::initMatch(Tournament* tournament, Player* secondPlayer) {
 	this->_status = INGAME;
 	secondPlayer->setStatus(INGAME);
@@ -49,6 +59,10 @@ void	Player::findMatch(Tournament* tournament) {
 
 		this->initMatch(tournament, (*it).second);
 	}
+}
+
+void	Player::addScoreMatch(std::string opponent, std::pair<int, int> score) {
+	this->_scoreHistory.push_back(std::make_pair(opponent, score));
 }
 
 void    Player::setName(const std::string& name) {

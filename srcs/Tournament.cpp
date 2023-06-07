@@ -1,16 +1,28 @@
 #include <iostream>
 #include <cstdlib>
+#include <exception>
 #include <unistd.h>
 #include "utils.hpp"
 #include "Tournament.hpp"
 
-Tournament::Tournament() {}
+Tournament::Tournament() {
+	this->_commands["MATCH"] = MATCH;
+	this->_commands["INFOS"] = INFOS;
+	this->_commands["FINISH"] = FINISH;
+}
 
 Tournament::~Tournament() {
 	std::map<const std::string, Player*>::iterator	it;
 
 	for (it = this->_playersList.begin(); it != this->_playersList.end(); it++)
 		delete (*it).second;
+}
+
+bool	Tournament::isCourtsFull() {
+	if (this->_matchsInProgress.size() >= this->_infos.nbCourts)
+		return true;
+
+	return false;
 }
 
 void	Tournament::savePlayers() {
@@ -73,7 +85,7 @@ void	Tournament::askCourtsNumber() {
 	printMessage("Combien de terrains sont disponibles?");
 	while (std::getline(std::cin, buffer)) {
 		if (!isStringNumeric(buffer)) {
-			printMessage("Vous ne pouvez entrer que des nombres!", ERROR);
+			printMessage("Vous ne pouvez entrer que des nombres!", WARNING);
 			continue ;
 		}
 		else {
@@ -97,13 +109,6 @@ void	Tournament::askCourtsNumber() {
 	}
 }
 
-bool	Tournament::isCourtsFull() {
-	if (this->_matchsInProgress.size() >= this->_infos.nbCourts)
-		return true;
-
-	return false;
-}
-
 void	Tournament::initFirstMatchs() {
 	std::map<const std::string, Player*>::iterator	it;
 
@@ -118,6 +123,28 @@ void	Tournament::initFirstMatchs() {
 			this->addPlayerToWaitingQueue((*it).second);
 }
 
+void	Tournament::managment() {
+	std::string												buffer;
+	std::map<std::string, void (*)(Tournament*)>::iterator	it;
+
+	printMessage("\nPour gérer la suite du tournoi, plusieurs commandes sont à votre disposition: ");
+	for (it = this->_commands.begin(); it != this->_commands.end(); it++)
+		printMessage("\t" + (*it).first);
+
+	std::cout << std::endl;
+	while (std::getline(std::cin, buffer)) {
+		try {
+			this->_commands.at(buffer)(this);
+		}
+		catch (std::exception &e) {
+			printMessage("La commande " + buffer + " n'existe pas!", WARNING);
+		}
+		printMessage("\nPour gérer le tournoi, plusieurs commandes sont à votre disposition: ");
+		for (it = this->_commands.begin(); it != this->_commands.end(); it++)
+			printMessage("\t" + (*it).first);
+	}
+}
+
 void	Tournament::addPlayer(const std::string name) {
 	if (this->_playersList.find(name) != this->_playersList.end()) {
 		printMessage("Le joueur " + name + " existe déjà.", ERROR);
@@ -128,11 +155,21 @@ void	Tournament::addPlayer(const std::string name) {
 
 void	Tournament::removePlayer(const std::string name) {
 	if (this->_playersList.find(name) == this->_playersList.end()) {
-		printMessage("Le joueur " + name + " n'existe pas.", ERROR);
+		printMessage("Le joueur " + name + " n'existe pas.", WARNING);
 		return ;
 	}
 	delete this->_playersList[name];
 	this->_playersList.erase(name);
+}
+
+Player*	Tournament::findPlayer(const std::string name) {
+	std::map<const std::string, Player*>::iterator	it;
+
+	it = this->_playersList.find(name);
+	if (it == this->_playersList.end())
+		return NULL;
+
+	return (*it).second;
 }
 
 void	Tournament::showPlayers() {
@@ -152,8 +189,61 @@ void	Tournament::addMatch(Player* player1, Player* player2) {
 	this->_matchsInProgress.push_back(std::make_pair(player1, player2));
 }
 
+void	Tournament::removeMatch(std::pair<Player*, Player*> match) {
+	std::vector< std::pair<Player*, Player*> >::iterator	it;
+
+	for (it = this->_matchsInProgress.begin(); it != this->_matchsInProgress.end(); it++)
+		if ((*it) == match)
+			break ;
+
+	this->_matchsInProgress.erase(it);
+}
+
+std::pair<Player*, Player*>	Tournament::findMatchByPlayer(Player* player) {
+	std::vector< std::pair<Player*, Player*> >::iterator	it;
+
+	if (player == NULL)
+		return std::pair<Player*, Player*>(NULL, NULL);
+
+	if (this->findPlayer(player->getName()) == NULL)
+		return std::pair<Player*, Player*>(NULL, NULL);
+
+	for (it = this->_matchsInProgress.begin(); it != this->_matchsInProgress.end(); it++)
+		if ((*it).first->getName() == player->getName() || (*it).second->getName() == player->getName())
+			return (*it);
+
+	return std::pair<Player*, Player*>(NULL, NULL);
+}
+
+void	Tournament::showMatchs() {
+	std::vector< std::pair<Player*, Player*> >::iterator	it;
+	std::vector<Player*>::iterator							itQueue;
+
+	std::cout << "\n----------------------------------------\n";
+	if (this->_matchsInProgress.size() == 0)
+		std::cout << "Aucun match en cours.\n";
+	else {
+		std::cout << "Liste des matchs en cours:\n";
+		for (it = this->_matchsInProgress.begin(); it != this->_matchsInProgress.end(); it++) {
+			std::cout << '\t' << (*it).first->getName() << " contre " << (*it).second->getName() << '\n';
+		}
+	}
+	std::cout << std::endl;
+	if (this->_waitingQueue.size() == 0)
+		std::cout << "Aucun joueur en attente de match.\n";
+	else {
+		std::cout << "Liste des joueurs en attente:\n";
+		for (itQueue = this->_waitingQueue.begin(); itQueue != this->_waitingQueue.end(); itQueue++)
+			std::cout << "\t- " << (*itQueue)->getName() << '\n';
+	}
+	std::cout << "----------------------------------------" << std::endl;
+}
+
 bool	Tournament::isPlayerInWaitingQueue(Player* player) {
 	std::vector<Player*>::iterator	it;
+
+	if (player == NULL)
+		return false;
 
 	for (it = this->_waitingQueue.begin(); it != this->_waitingQueue.end(); it++)
 		if ((*it) == player)
@@ -195,32 +285,12 @@ void	Tournament::removePlayerFromWaitingQueue(Player* player) {
 	this->_waitingQueue.erase(it);
 }
 
-void	Tournament::showMatchs() {
-	std::vector< std::pair<Player*, Player*> >::iterator	it;
-	std::vector<Player*>::iterator							itQueue;
-
-	std::cout << "\n----------------------------------------\n";
-	if (this->_matchsInProgress.size() == 0)
-		std::cout << "Aucun match en cours.\n";
-	else {
-		std::cout << "Liste des matchs en cours:\n";
-		for (it = this->_matchsInProgress.begin(); it != this->_matchsInProgress.end(); it++) {
-			std::cout << '\t' << (*it).first->getName() << " contre " << (*it).second->getName() << '\n';
-		}
-	}
-	std::cout << std::endl;
-	if (this->_waitingQueue.size() == 0)
-		std::cout << "Aucun joueur en attente de match.\n";
-	else {
-		std::cout << "Liste des joueurs en attente:\n";
-		for (itQueue = this->_waitingQueue.begin(); itQueue != this->_waitingQueue.end(); itQueue++)
-			std::cout << "\t- " << (*itQueue)->getName() << '\n';
-	}
-	std::cout << "----------------------------------------" << std::endl;
-}
-
 unsigned int	Tournament::getNumberOfPlayers() const {
 	return this->_playersList.size();
+}
+
+unsigned int	Tournament::getNumberOfWaitingPlayers() const {
+	return this->_waitingQueue.size();
 }
 
 std::map<const std::string, Player*>&	Tournament::getPlayersList() {

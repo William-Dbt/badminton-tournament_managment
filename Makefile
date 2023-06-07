@@ -20,8 +20,8 @@ PATHSRCS	= srcs/
 PATHHEADERS	= includes/
 PATHNULL	= /dev/null
 
-SRCS		= $(addprefix ${PATHSRCS}, main.cpp Tournament.cpp Player.cpp \
-									utils.cpp)
+SRCS		= $(addprefix ${PATHSRCS}, main.cpp Tournament.cpp Player.cpp utils.cpp) \
+			$(addprefix ${PATHSRCS}commands/, MATCH.cpp INFOS.cpp FINISH.cpp)
 
 
 OBJS		= ${SRCS:.cpp=.o}
