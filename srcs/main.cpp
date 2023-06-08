@@ -27,5 +27,6 @@ int	main() {
 	tournament.initFirstMatchs();
 	tournament.showMatchs();
 	tournament.managment();
+	std::cout << "main" << std::endl;
 	return 0;
 }

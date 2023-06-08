@@ -5,6 +5,8 @@
 #include "utils.hpp"
 #include "Tournament.hpp"
 
+bool	g_bFinishTournament = false;
+
 Tournament::Tournament() {
 	this->_commands["MATCH"] = MATCH;
 	this->_commands["INFOS"] = INFOS;
@@ -128,15 +130,18 @@ void	Tournament::managment() {
 		printMessage("\t" + (*it).first);
 
 	std::cout << std::endl;
-	while (std::getline(std::cin, buffer)) {
+	while (!g_bFinishTournament && std::getline(std::cin, buffer)) {
 		try {
 			this->_commands.at(buffer)(this);
 		}
 		catch (std::exception &e) {
 			printMessage("La commande " + buffer + " n'existe pas!", WARNING);
 		}
+		if (g_bFinishTournament)
+			break ;
+
 		printMessage("\nPour gérer le tournoi, plusieurs commandes sont à votre disposition: ");
-		for (it = this->_commands.begin(); it != this->_commands.end(); it++)
+		for (it = this->_commands.begin(); it !=  this->_commands.end(); it++)
 			printMessage("\t" + (*it).first);
 	}
 }
