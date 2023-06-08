@@ -3,16 +3,18 @@
 #include "Tournament.hpp"
 
 static void	startMatch(Tournament* tournament) {
-	std::vector<Player*>&			_waitingQueue = tournament->getWaitingQueue();
+	unsigned int					nbWaitingPlayers = tournament->getNumberOfWaitingPlayers();
+	std::vector<Player*>&			waitingQueue = tournament->getWaitingQueue();
 	std::vector<Player*>::iterator	mainIt;
 
-	if (tournament->getNumberOfWaitingPlayers() <= 1)
+	if (nbWaitingPlayers <= 1)
 		return (printMessage("Il n'y a pas assez de joueur en fil d'attente pour lancer un match!", ERROR));
 
 	if (tournament->isCourtsFull())
 		return (printMessage("Tous les terrains sont occupés pour le moment.", ERROR));
 
-	for (mainIt = _waitingQueue.begin(); mainIt != _waitingQueue.end(); mainIt++) {
+	tournament->showMatchs(false);
+	for (mainIt = waitingQueue.begin(); mainIt != waitingQueue.end(); mainIt++) {
 		if (tournament->getNumberOfWaitingPlayers() <= 1)
 			break ;
 
@@ -21,7 +23,8 @@ static void	startMatch(Tournament* tournament) {
 
 		(*mainIt)->findMatch(tournament);
 	}
-	printMessage("Si aucun match n'a été trouvé, il se peut que tous les joueurs en fil d'attente aient déjà joué entre eux.");
+	if (nbWaitingPlayers == tournament->getNumberOfWaitingPlayers())
+		printMessage("Si aucun match n'a été trouvé, il se peut que tous les joueurs en fil d'attente aient déjà joué entre eux.");
 }
 
 static bool	isScoreCorrect(std::string score) {
@@ -54,7 +57,8 @@ static void	finishMatch(Tournament* tournament) {
 	std::pair<Player*, Player*>	match;
 	std::pair<int, int>			score;
 
-	printMessage("Entrez le nom d'un des deux joueurs du match: ");
+	tournament->showMatchs(true, false);
+	printMessage("Entrez le nom de l'un des deux joueurs du match: ");
 	std::getline(std::cin, buffer);
 	match = tournament->findMatchByPlayer(tournament->findPlayer(buffer));
 	if (match.first == NULL) {

@@ -28,7 +28,7 @@ class   Tournament {
 		void						addMatch(Player* player1, Player* player2);
 		void						removeMatch(std::pair<Player*, Player*> match);
 		std::pair<Player*, Player*>	findMatchByPlayer(Player* player);
-		void						showMatchs();
+		void						showMatchs(bool showMatchs = true, bool showWaitingList = true);
 
 		bool	isPlayerInWaitingQueue(Player* player);
 		void	addPlayerToWaitingQueue(Player* player);
