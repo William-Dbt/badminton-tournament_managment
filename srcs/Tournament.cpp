@@ -293,6 +293,10 @@ unsigned int	Tournament::getNumberOfWaitingPlayers() const {
 	return this->_waitingQueue.size();
 }
 
+std::vector<Player*>&	Tournament::getWaitingQueue() {
+	return this->_waitingQueue;
+}
+
 std::map<const std::string, Player*>&	Tournament::getPlayersList() {
 	return this->_playersList;
 }

@@ -36,6 +36,7 @@ class   Tournament {
 
 		unsigned int							getNumberOfPlayers() const;
 		unsigned int							getNumberOfWaitingPlayers() const;
+		std::vector<Player*>&					getWaitingQueue();
 		std::map<const std::string, Player*>&	getPlayersList();
 
 	private:

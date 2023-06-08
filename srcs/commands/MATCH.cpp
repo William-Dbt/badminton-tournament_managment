@@ -3,11 +3,16 @@
 #include "Tournament.hpp"
 
 static void	startMatch(Tournament* tournament) {
+	std::vector<Player*>&			_waitingQueue = tournament->getWaitingQueue();
+	std::vector<Player*>::iterator	mainIt;
 	std::vector<Player*>::iterator	it;
 
 	if (tournament->getNumberOfWaitingPlayers() <= 1)
 		printMessage("Impossible de trouver un match pour le moment!", ERROR);
 
+	for (mainIt = _waitingQueue.begin(); mainIt != _waitingQueue.end(); mainIt++) {
+		
+	}
 	// Check Waiting Queue in order to give match for thoses which aren't fight
 }
 
