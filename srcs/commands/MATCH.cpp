@@ -8,10 +8,13 @@ static void	startMatch(Tournament* tournament) {
 	std::vector<Player*>::iterator	it;
 
 	if (tournament->getNumberOfWaitingPlayers() <= 1)
-		printMessage("Impossible de trouver un match pour le moment!", ERROR);
+		return (printMessage("Impossible de trouver un match pour le moment!", ERROR));
+
+	if (tournament->isCourtsFull())
+		return (printMessage("Tous les terrains sont occupés pour le moment.", ERROR));
 
 	for (mainIt = _waitingQueue.begin(); mainIt != _waitingQueue.end(); mainIt++) {
-		
+
 	}
 	// Check Waiting Queue in order to give match for thoses which aren't fight
 }
