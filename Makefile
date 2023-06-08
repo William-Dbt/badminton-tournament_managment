@@ -21,7 +21,7 @@ PATHHEADERS	= includes/
 PATHNULL	= /dev/null
 
 SRCS		= $(addprefix ${PATHSRCS}, main.cpp Tournament.cpp Player.cpp utils.cpp) \
-			$(addprefix ${PATHSRCS}commands/, MATCH.cpp INFOS.cpp FINISH.cpp)
+			$(addprefix ${PATHSRCS}commands/, MATCH.cpp INFOS.cpp FINISH.cpp HISTORY.cpp)
 
 
 OBJS		= ${SRCS:.cpp=.o}

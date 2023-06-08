@@ -70,6 +70,26 @@ void	Player::addScoreMatch(std::string opponent, std::pair<int, int> score) {
 	this->_scoreHistory.push_back(std::make_pair(opponent, score));
 }
 
+void	Player::showScoreHistory() {
+	std::pair<int, int>														score;
+	std::vector< std::pair<std::string, std::pair<int, int> > >::iterator	it;
+
+	printMessage("########################################");
+	printMessage("Historique des matchs de " + this->_name + "\n");
+	for (it = this->_scoreHistory.begin(); it != this->_scoreHistory.end(); it++) {
+		score = (*it).second;
+		if (score.first > score.second)
+			std::cout << "GAGNÉ ";
+		else
+			std::cout << "PERDU ";
+
+		std::cout << "contre " << (*it).first << '.';
+		std::cout << " (" << score.first << " à " << score.second << ')' << std::endl;
+	}
+	printMessage("########################################");
+}
+
+
 void    Player::setName(const std::string& name) {
     this->_name = name;
 }
@@ -84,6 +104,10 @@ int	Player::getStatus() const {
 
 std::string	Player::getName() const {
 	return this->_name;
+}
+
+std::vector< std::pair<std::string, std::pair<int, int> > >	Player::getScoreHistory() const {
+	return this->_scoreHistory;
 }
 
 bool	Player::operator==(const Player &ref) const {

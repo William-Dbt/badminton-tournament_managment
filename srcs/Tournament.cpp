@@ -8,6 +8,7 @@
 Tournament::Tournament() {
 	this->_commands["MATCH"] = MATCH;
 	this->_commands["INFOS"] = INFOS;
+	this->_commands["HISTORY"] = HISTORY;
 	this->_commands["FINISH"] = FINISH;
 }
 

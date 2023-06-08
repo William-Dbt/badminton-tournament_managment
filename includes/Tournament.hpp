@@ -54,6 +54,7 @@ class   Tournament {
 
 void	MATCH(Tournament* tournament);
 void	INFOS(Tournament* tournament);
+void	HISTORY(Tournament* tournament);
 void	FINISH(Tournament* tournament);
 
 #endif

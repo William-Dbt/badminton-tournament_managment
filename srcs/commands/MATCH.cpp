@@ -24,7 +24,7 @@ static void	startMatch(Tournament* tournament) {
 		(*mainIt)->findMatch(tournament);
 	}
 	if (nbWaitingPlayers == tournament->getNumberOfWaitingPlayers())
-		printMessage("Si aucun match n'a été trouvé, il se peut que tous les joueurs en fil d'attente aient déjà joué entre eux.");
+		printMessage("Aucun match n'a été trouvé, il se peut que tous les joueurs en fil d'attente aient déjà joué entre eux.");
 }
 
 static bool	isScoreCorrect(std::string score) {
@@ -73,7 +73,6 @@ static void	finishMatch(Tournament* tournament) {
 		printMessage("Le format des scores est incorrect!", WARNING);
 		return ;
 	}
-
 	score.first = atoi(buffer.substr(0, buffer.find('-')).c_str());
 	score.second = atoi(buffer.substr(buffer.find('-') + 1).c_str());
 	match.first->addScoreMatch(match.second->getName(), score);
@@ -83,6 +82,7 @@ static void	finishMatch(Tournament* tournament) {
 	tournament->addPlayerToWaitingQueue(match.first);
 	tournament->addPlayerToWaitingQueue(match.second);
 	tournament->removeMatch(match);
+	printMessage("Les deux joueurs ont été ajoutés dans la fil d'attente, le score est enregistré.");
 }
 
 void	MATCH(Tournament* tournament) {

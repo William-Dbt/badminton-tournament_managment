@@ -7,7 +7,7 @@
 class Tournament;
 
 enum	e_status {
-	WAITING,
+	WAITING = 0,
 	INGAME,
 	FINISHED
 };
@@ -22,14 +22,16 @@ class   Player {
 
 		void	initMatch(Tournament* tournament, Player* player);
 		void	findMatch(Tournament* tournament);
-
 		void	addScoreMatch(std::string opponent, std::pair<int, int> score);
+
+		void	showScoreHistory();
 
 		void    setName(const std::string& name);
 		void	setStatus(const int status);
 
-		int			getStatus() const;
-		std::string	getName() const;
+		int															getStatus() const;
+		std::string													getName() const;
+		std::vector< std::pair<std::string, std::pair<int, int> > >	getScoreHistory() const;
 
 		bool	operator==(const Player& ref) const;
 
