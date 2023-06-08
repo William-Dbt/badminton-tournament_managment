@@ -54,6 +54,7 @@ clean:
 
 fclean:		clean
 				@echo "${BOLD}${RED}Removing:${END}\t${NAME}"
+				@${RM} ${NAME} >${PATHNULL}
 
 re:			fclean all
 

@@ -118,9 +118,6 @@ void	Tournament::initFirstMatchs() {
 
 		(*it).second->findMatch(this);
 	}
-	for (it = this->_playersList.begin(); it != this->_playersList.end(); it++)
-		if ((*it).second->getStatus() != INGAME)
-			this->addPlayerToWaitingQueue((*it).second);
 }
 
 void	Tournament::managment() {
@@ -146,11 +143,15 @@ void	Tournament::managment() {
 }
 
 void	Tournament::addPlayer(const std::string name) {
+	Player*	player;
+
 	if (this->_playersList.find(name) != this->_playersList.end()) {
 		printMessage("Le joueur " + name + " existe déjà.", ERROR);
 		return ;
 	}
-	this->_playersList.insert(std::make_pair(name, new Player(name)));
+	player = new Player(name);
+	this->_playersList.insert(std::make_pair(name, player));
+	this->addPlayerToWaitingQueue(player);
 }
 
 void	Tournament::removePlayer(const std::string name) {

@@ -5,18 +5,23 @@
 static void	startMatch(Tournament* tournament) {
 	std::vector<Player*>&			_waitingQueue = tournament->getWaitingQueue();
 	std::vector<Player*>::iterator	mainIt;
-	std::vector<Player*>::iterator	it;
 
 	if (tournament->getNumberOfWaitingPlayers() <= 1)
-		return (printMessage("Impossible de trouver un match pour le moment!", ERROR));
+		return (printMessage("Il n'y a pas assez de joueur en fil d'attente pour lancer un match!", ERROR));
 
 	if (tournament->isCourtsFull())
 		return (printMessage("Tous les terrains sont occupés pour le moment.", ERROR));
 
 	for (mainIt = _waitingQueue.begin(); mainIt != _waitingQueue.end(); mainIt++) {
+		if (tournament->getNumberOfWaitingPlayers() <= 1)
+			break ;
 
+		if (tournament->isCourtsFull())
+			break ;
+
+		(*mainIt)->findMatch(tournament);
 	}
-	// Check Waiting Queue in order to give match for thoses which aren't fight
+	printMessage("Si aucun match n'a été trouvé, il se peut que tous les joueurs en fil d'attente aient déjà joué entre eux.");
 }
 
 static bool	isScoreCorrect(std::string score) {
@@ -82,6 +87,7 @@ void	MATCH(Tournament* tournament) {
 	printMessage("Pour commencer un nouveau match tapez \'DEBUT\'");
 	printMessage("Pour finir un match tapez \'FIN\'.");
 	std::getline(std::cin, buffer);
+	std::cout << std::endl;
 	if (buffer.compare("DEBUT") == 0)
 		startMatch(tournament);
 	else if (buffer.compare("FIN") == 0)

@@ -31,6 +31,15 @@ void	Player::addToListAlreadyPlayed(Player* player) {
 }
 
 void	Player::initMatch(Tournament* tournament, Player* secondPlayer) {
+	if (secondPlayer == NULL)
+		return ;
+
+	if (tournament->isPlayerInWaitingQueue(this))
+		tournament->removePlayerFromWaitingQueue(this);
+
+	if (tournament->isPlayerInWaitingQueue(secondPlayer))
+		tournament->removePlayerFromWaitingQueue(secondPlayer);
+
 	this->_status = INGAME;
 	secondPlayer->setStatus(INGAME);
 	printMessage("Match trouvé entre " + this->_name + " et " + secondPlayer->getName() + "!");
@@ -38,26 +47,22 @@ void	Player::initMatch(Tournament* tournament, Player* secondPlayer) {
 }
 
 void	Player::findMatch(Tournament* tournament) {
-	std::map<const std::string, Player*>&			playersList = tournament->getPlayersList();
-	std::map<const std::string, Player*>::iterator	it;
+	std::vector<Player*>::iterator	it;
 
 	if (tournament->isCourtsFull())
 		return ;
 
-	for (it = playersList.begin(); it != playersList.end(); it++) {
-		if (this->_status != WAITING && this->_status != -1)
-			break ;
+	if (tournament->getNumberOfWaitingPlayers() <= 1)
+		return ;
 
-		if ((*it).second == this)
+	for (it = tournament->getWaitingQueue().begin(); it != tournament->getWaitingQueue().end(); it++) {
+		if ((*it) == this)
 			continue ;
 
-		if ((*it).second->getStatus() != WAITING && (*it).second->getStatus() != -1)
+		if (this->hasAlreadyPlayAgainst((*it)))
 			continue ;
 
-		if (hasAlreadyPlayAgainst((*it).second))
-			continue ;
-
-		this->initMatch(tournament, (*it).second);
+		return initMatch(tournament, (*it));
 	}
 }
 
