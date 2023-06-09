@@ -314,6 +314,14 @@ unsigned int	Tournament::getNumberOfWaitingPlayers() const {
 	return this->_waitingQueue.size();
 }
 
+unsigned int	Tournament::getNumberOfCourts() const {
+	return this->_infos.nbCourts;
+}
+
+std::vector< std::pair<Player*, Player*> >&	Tournament::getMatchsInProgress() {
+	return this->_matchsInProgress;
+}
+
 std::vector<Player*>&	Tournament::getWaitingQueue() {
 	return this->_waitingQueue;
 }

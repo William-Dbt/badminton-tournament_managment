@@ -3,6 +3,8 @@
 #include "utils.hpp"
 #include "Tournament.hpp"
 
+void	saveHistory(Tournament* tournament);
+
 static void	showScoreHistoryOfAllPlayers(std::map<const std::string, Player*>& playerList) {
 	std::map<const std::string, Player*>::iterator	it;
 
@@ -37,6 +39,8 @@ int	main() {
 	tournament.initFirstMatchs();
 	tournament.showMatchs();
 	tournament.managment();
+
 	showScoreHistoryOfAllPlayers(tournament.getPlayersList());
+	saveHistory(&tournament);
 	return 0;
 }

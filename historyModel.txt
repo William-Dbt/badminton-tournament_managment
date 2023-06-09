@@ -1,0 +1,55 @@
+Don't change order of the model
+The programm will read all of this informations in order of the file
+- List of players
+- Tournament infos
+- Matches in progress
+- Waiting queue
+- List of players (whatever the order)
+
+If a player is not define at the end of the file, error occurs
+Save files in /var/logs/usjm_tournament folder
+
+playerList
+{
+	AAA
+	CCC
+	TTT
+	XXX
+	YYY
+	WWW
+	ZZZ
+}
+
+tournamentInfos
+{
+	nbCourts:number
+}
+
+matchesInProgress
+{
+	XXX:YYY
+	WWW:ZZZ
+}
+
+waitingQueue
+{
+	AAA
+	CCC
+	TTT
+}
+
+XXX
+{
+	name:string
+
+	scoreHistory
+	{
+		against:nameOfPlayer
+		score:number-number
+
+		against:nameOfPlayer
+		...
+	}
+}
+
+...

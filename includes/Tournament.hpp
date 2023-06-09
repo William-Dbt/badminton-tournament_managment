@@ -34,11 +34,13 @@ class   Tournament {
 		void	addPlayerToWaitingQueue(Player* player);
 		void	removePlayerFromWaitingQueue(Player* player);
 
-		unsigned int							getNumberOfPlayingMatches() const;
-		unsigned int							getNumberOfPlayers() const;
-		unsigned int							getNumberOfWaitingPlayers() const;
-		std::vector<Player*>&					getWaitingQueue();
-		std::map<const std::string, Player*>&	getPlayersList();
+		unsigned int								getNumberOfPlayingMatches() const;
+		unsigned int								getNumberOfPlayers() const;
+		unsigned int								getNumberOfWaitingPlayers() const;
+		unsigned int								getNumberOfCourts() const;
+		std::vector< std::pair<Player*, Player*> >&	getMatchsInProgress();
+		std::vector<Player*>&						getWaitingQueue();
+		std::map<const std::string, Player*>&		getPlayersList();
 
 	private:
 		struct s_infos {

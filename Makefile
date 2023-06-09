@@ -20,7 +20,8 @@ PATHSRCS	= srcs/
 PATHHEADERS	= includes/
 PATHNULL	= /dev/null
 
-SRCS		= $(addprefix ${PATHSRCS}, main.cpp Tournament.cpp Player.cpp utils.cpp) \
+SRCS		= $(addprefix ${PATHSRCS}, main.cpp Tournament.cpp Player.cpp \
+									tournamentHistory.cpp utils.cpp) \
 			$(addprefix ${PATHSRCS}commands/, MATCH.cpp INFOS.cpp FINISH.cpp HISTORY.cpp)
 
 
@@ -47,6 +48,7 @@ all:		${NAME}
 ${NAME}:	${OBJS}
 				@echo "${BOLD}${GREEN}Building:${END}\t${NAME}"
 				@${CC} ${OBJS} -o ${NAME} >${PATHNULL}
+				@sh ./init_folder.sh >${PATHNULL}
 
 clean:
 				@echo "${BOLD}${RED}Removing:${END}\tAll .o files"
