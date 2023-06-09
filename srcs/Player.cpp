@@ -3,7 +3,7 @@
 #include "utils.hpp"
 #include "Player.hpp"
 
-Player::Player(const std::string name) : _status(-1), _name(name) {}
+Player::Player(const std::string name) : _status(-1), _name(name), _nbMatches(0) {}
 
 Player::~Player() {}
 
@@ -68,27 +68,49 @@ void	Player::findMatch(Tournament* tournament) {
 
 void	Player::addScoreMatch(std::string opponent, std::pair<int, int> score) {
 	this->_scoreHistory.push_back(std::make_pair(opponent, score));
+	this->_nbMatches++;
 }
 
 void	Player::showScoreHistory() {
 	std::pair<int, int>														score;
 	std::vector< std::pair<std::string, std::pair<int, int> > >::iterator	it;
 
-	printMessage("########################################");
-	printMessage("Historique des matchs de " + this->_name + "\n");
-	for (it = this->_scoreHistory.begin(); it != this->_scoreHistory.end(); it++) {
-		score = (*it).second;
-		if (score.first > score.second)
-			std::cout << "GAGNÉ ";
-		else
-			std::cout << "PERDU ";
+	printMessage("----------------------------------------");
+	if (this->_nbMatches == 0)
+		std::cout << "Le joueur " << this->_name << " n'a effectué aucun match." << std::endl;
+	else {
+		printMessage("Historique des matchs de " + this->_name + "\n");
+		for (it = this->_scoreHistory.begin(); it != this->_scoreHistory.end(); it++) {
+			score = (*it).second;
+			if (score.first > score.second)
+				std::cout << "GAGNÉ ";
+			else
+				std::cout << "PERDU ";
 
-		std::cout << "contre " << (*it).first << '.';
-		std::cout << " (" << score.first << " à " << score.second << ')' << std::endl;
+			std::cout << "contre " << (*it).first << '.';
+			std::cout << " (" << score.first << " à " << score.second << ")\n" << std::endl;
+		}
+		std::cout << "Nombre de matchs effectué: " << this->_nbMatches << '.' << std::endl;
+		std::cout << "Score total accumulé: " << this->getTotalScore() << '.' << std::endl;
 	}
-	printMessage("########################################");
+	printMessage("----------------------------------------");
 }
 
+unsigned int	Player::getTotalScore() {
+	unsigned int	totalScore = 0;
+
+	std::pair<int, int>														score;
+	std::vector< std::pair<std::string, std::pair<int, int> > >::iterator	it;
+
+	if (this->_nbMatches == 0)
+		return 0;
+
+	for (it = this->_scoreHistory.begin(); it != this->_scoreHistory.end(); it++) {
+		score = (*it).second;
+		totalScore += score.first;
+	}
+	return totalScore;
+}
 
 void    Player::setName(const std::string& name) {
     this->_name = name;

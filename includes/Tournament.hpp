@@ -34,6 +34,7 @@ class   Tournament {
 		void	addPlayerToWaitingQueue(Player* player);
 		void	removePlayerFromWaitingQueue(Player* player);
 
+		unsigned int							getNumberOfPlayingMatches() const;
 		unsigned int							getNumberOfPlayers() const;
 		unsigned int							getNumberOfWaitingPlayers() const;
 		std::vector<Player*>&					getWaitingQueue();

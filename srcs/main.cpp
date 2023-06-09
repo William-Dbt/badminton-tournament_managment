@@ -3,6 +3,16 @@
 #include "utils.hpp"
 #include "Tournament.hpp"
 
+static void	showScoreHistoryOfAllPlayers(std::map<const std::string, Player*>& playerList) {
+	std::map<const std::string, Player*>::iterator	it;
+
+	std::cout << std::endl;
+	for (it = playerList.begin(); it != playerList.end(); it++) {
+		(*it).second->showScoreHistory();
+		std::cout << std::endl;
+	}
+}
+
 static void	mainMessage() {
 	std::cout << "########################################\n";
 	std::cout << "USJM Badminton: Programme pour tournois\n";
@@ -27,6 +37,6 @@ int	main() {
 	tournament.initFirstMatchs();
 	tournament.showMatchs();
 	tournament.managment();
-	std::cout << "main" << std::endl;
+	showScoreHistoryOfAllPlayers(tournament.getPlayersList());
 	return 0;
 }

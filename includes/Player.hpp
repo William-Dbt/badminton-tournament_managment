@@ -24,7 +24,8 @@ class   Player {
 		void	findMatch(Tournament* tournament);
 		void	addScoreMatch(std::string opponent, std::pair<int, int> score);
 
-		void	showScoreHistory();
+		void			showScoreHistory();
+		unsigned int	getTotalScore();
 
 		void    setName(const std::string& name);
 		void	setStatus(const int status);
@@ -36,10 +37,12 @@ class   Player {
 		bool	operator==(const Player& ref) const;
 
 	private:
-		int															_status;
-		std::string 												_name;
-		std::vector<Player*>										_listPlayersAlreadyPlayed;
-		std::vector< std::pair<std::string, std::pair<int, int> > >	_scoreHistory;
+		int						_status;
+		std::string 			_name;
+		int						_nbMatches;
+		std::vector<Player*>	_listPlayersAlreadyPlayed;
+
+		std::vector< std::pair< std::string, std::pair<int, int> > >	_scoreHistory;
 };
 
 # include "Tournament.hpp"

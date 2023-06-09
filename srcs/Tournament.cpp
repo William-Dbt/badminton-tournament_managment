@@ -302,6 +302,10 @@ void	Tournament::removePlayerFromWaitingQueue(Player* player) {
 	this->_waitingQueue.erase(it);
 }
 
+unsigned int	Tournament::getNumberOfPlayingMatches() const {
+	return this->_matchsInProgress.size();
+}
+
 unsigned int	Tournament::getNumberOfPlayers() const {
 	return this->_playersList.size();
 }

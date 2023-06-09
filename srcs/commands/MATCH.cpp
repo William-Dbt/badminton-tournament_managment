@@ -57,22 +57,22 @@ static void	finishMatch(Tournament* tournament) {
 	std::pair<Player*, Player*>	match;
 	std::pair<int, int>			score;
 
+	if (tournament->getNumberOfPlayingMatches() == 0)
+		return printMessage("Il n'y a aucun match de lancé pour le moment.");
+
 	tournament->showMatchs(true, false);
 	printMessage("Entrez le nom de l'un des deux joueurs du match: ");
 	std::getline(std::cin, buffer);
 	match = tournament->findMatchByPlayer(tournament->findPlayer(buffer));
-	if (match.first == NULL) {
-		printMessage("Le participant " + buffer + " n'a été trouvé dans aucun match!", WARNING);
-		return ;
-	}
+	if (match.first == NULL)
+		return printMessage("Le participant " + buffer + " n'a été trouvé dans aucun match!", WARNING);
 
 	printMessage("Indiquez le score des joueurs au format suivant");
 	printMessage("\t\'score de " + match.first->getName() + "\'-\'score de " + match.second->getName() + "\' sans les guillemets.");
 	std::getline(std::cin, buffer);
-	if (!isScoreCorrect(buffer)) {
-		printMessage("Le format des scores est incorrect!", WARNING);
-		return ;
-	}
+	if (!isScoreCorrect(buffer))
+		return printMessage("Le format des scores est incorrect!", WARNING);
+
 	score.first = atoi(buffer.substr(0, buffer.find('-')).c_str());
 	score.second = atoi(buffer.substr(buffer.find('-') + 1).c_str());
 	match.first->addScoreMatch(match.second->getName(), score);
