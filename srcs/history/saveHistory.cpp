@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <time.h>
+#include "utils.hpp"
 #include "Tournament.hpp"
 
 static std::string	getCurrentDateTime() {
@@ -95,12 +96,18 @@ static void	savePlayersHistory(std::fstream& file, std::map<const std::string, P
 }
 
 void	saveHistory(Tournament* tournament) {
+	std::string		filePathName;
 	std::fstream	file;
 
+	filePathName = getPathOfFile();
 	file.open(getPathOfFile(), std::fstream::out);
+	if (!file.is_open())
+		return printMessage("Impossible de créer le fichier " + filePathName + ".", ERROR);
+
 	savePlayers(file, tournament->getPlayersList());
 	saveTournament(file, tournament->getNumberOfCourts());
 	saveMatchesInProgress(file, tournament->getMatchsInProgress());
 	saveWaitingQueue(file, tournament->getWaitingQueue());
 	savePlayersHistory(file, tournament->getPlayersList());
+	printMessage("Les logs du tournoi sont enregistrés dans le fichier suivant: " + filePathName + ".");
 }
