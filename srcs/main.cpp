@@ -4,6 +4,7 @@
 #include "Tournament.hpp"
 
 void	saveHistory(Tournament* tournament);
+void	getHistory(Tournament* tournament);
 
 static void	showScoreHistoryOfAllPlayers(std::map<const std::string, Player*>& playerList) {
 	std::map<const std::string, Player*>::iterator	it;
@@ -26,17 +27,21 @@ int	main() {
 	Tournament	tournament;
 
 	mainMessage();
-	tournament.savePlayers();
-	tournament.askCourtsNumber();
+	if (tournament.startWithHistory())
+		getHistory(&tournament);
+	else {
+		tournament.savePlayers();
+		tournament.askCourtsNumber();
 
-	printMessage("\nLancement du tournoi!");
-	for (int i = 5; i > 0; i--) {
-		std::cout << i << "...\n";
-		sleep(1);
+		printMessage("\nLancement du tournoi!");
+		for (int i = 5; i > 0; i--) {
+			std::cout << i << "...\n";
+			sleep(1);
+		}
+		printMessage("Que les matchs commencent!\n");
+
+		tournament.initFirstMatchs();
 	}
-	printMessage("Que les matchs commencent!\n");
-
-	tournament.initFirstMatchs();
 	tournament.showMatchs();
 	tournament.managment();
 

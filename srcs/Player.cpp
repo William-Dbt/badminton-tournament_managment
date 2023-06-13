@@ -30,7 +30,7 @@ void	Player::addToListAlreadyPlayed(Player* player) {
 	this->_listPlayersAlreadyPlayed.push_back(player);
 }
 
-void	Player::initMatch(Tournament* tournament, Player* secondPlayer) {
+void	Player::initMatch(Tournament* tournament, Player* secondPlayer, bool showMessage) {
 	if (secondPlayer == NULL)
 		return ;
 
@@ -42,7 +42,9 @@ void	Player::initMatch(Tournament* tournament, Player* secondPlayer) {
 
 	this->_status = INGAME;
 	secondPlayer->setStatus(INGAME);
-	printMessage("Match trouvé entre " + this->_name + " et " + secondPlayer->getName() + "!");
+	if (showMessage)
+		printMessage("Match trouvé entre " + this->_name + " et " + secondPlayer->getName() + "!");
+
 	tournament->addMatch(this, secondPlayer);
 }
 

@@ -54,17 +54,6 @@ static void	saveMatchesInProgress(std::fstream& file, std::vector< std::pair<Pla
 	file << "}\n\n";
 }
 
-static void	saveWaitingQueue(std::fstream& file, std::vector<Player*> waitingQueue) {
-	std::vector<Player*>::iterator	it;
-
-	file << "waitingQueue\n";
-	file << "{\n";
-	for (it = waitingQueue.begin(); it != waitingQueue.end(); it++)
-		file << '\t' << (*it)->getName() << '\n';
-
-	file << "}\n\n";
-}
-
 static void	savePlayersHistory(std::fstream& file, std::map<const std::string, Player*> playerList) {
 	Player*											player;
 	std::map<const std::string, Player*>::iterator	it;
@@ -76,10 +65,11 @@ static void	savePlayersHistory(std::fstream& file, std::map<const std::string, P
 		player = (*it).second;
 		file << (*it).first << '\n';
 		file << "{\n";
-		file << "\tname:" << player->getName() << "\n\n";
+		scoreHistory = player->getScoreHistory();
+		file << "\ttotalMatchesPlayed:" << scoreHistory.size() << '\n';
+		file << "\ttotalPointsEarned:" << player->getTotalScore() << "\n\n";
 		file << "\tscoreHistory\n";
 		file << "\t{\n";
-		scoreHistory = (*it).second->getScoreHistory();
 		for (itScore = scoreHistory.begin(); itScore != scoreHistory.end(); itScore++) {
 			file << "\t\tagainst:" << (*itScore).first << '\n';
 			file << "\t\tscore:" << (*itScore).second.first << '-' << (*itScore).second.second << '\n';
@@ -90,7 +80,7 @@ static void	savePlayersHistory(std::fstream& file, std::map<const std::string, P
 		file << "}\n";
 		if (++it != playerList.end())
 			file << '\n';
-		
+
 		--it;
 	}
 }
@@ -107,7 +97,6 @@ void	saveHistory(Tournament* tournament) {
 	savePlayers(file, tournament->getPlayersList());
 	saveTournament(file, tournament->getNumberOfCourts());
 	saveMatchesInProgress(file, tournament->getMatchsInProgress());
-	saveWaitingQueue(file, tournament->getWaitingQueue());
 	savePlayersHistory(file, tournament->getPlayersList());
 	printMessage("Les logs du tournoi sont enregistrés dans le fichier suivant: " + filePathName + ".");
 }

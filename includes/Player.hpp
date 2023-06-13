@@ -20,7 +20,7 @@ class   Player {
 		bool	hasAlreadyPlayAgainst(Player* player);
 		void	addToListAlreadyPlayed(Player* player);
 
-		void	initMatch(Tournament* tournament, Player* player);
+		void	initMatch(Tournament* tournament, Player* player, bool showMessage = true);
 		void	findMatch(Tournament* tournament);
 		void	addScoreMatch(std::string opponent, std::pair<int, int> score);
 

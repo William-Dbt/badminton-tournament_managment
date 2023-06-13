@@ -15,6 +15,7 @@ class   Tournament {
 
 		bool	isCourtsFull();
 
+		bool	startWithHistory();
 		void	savePlayers();
 		void	askCourtsNumber();
 		void	initFirstMatchs();
@@ -33,6 +34,8 @@ class   Tournament {
 		bool	isPlayerInWaitingQueue(Player* player);
 		void	addPlayerToWaitingQueue(Player* player);
 		void	removePlayerFromWaitingQueue(Player* player);
+
+		void	setCourts(unsigned int courts);
 
 		unsigned int								getNumberOfPlayingMatches() const;
 		unsigned int								getNumberOfPlayers() const;

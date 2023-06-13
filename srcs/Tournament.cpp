@@ -5,6 +5,8 @@
 #include "utils.hpp"
 #include "Tournament.hpp"
 
+void	getHistory(Tournament* tournament);
+
 bool	g_bFinishTournament = false;
 
 Tournament::Tournament() {
@@ -26,6 +28,20 @@ bool	Tournament::isCourtsFull() {
 		return true;
 
 	return false;
+}
+
+bool	Tournament::startWithHistory() {
+	std::string	buffer;
+
+	printMessage("Voulez-vous commencer le tournoi à partir d'un historique existant? (O:oui/N:non)");
+	std::getline(std::cin, buffer);
+	if (isOui(buffer))
+		return true;
+	else if (isNon(buffer))
+		return false;
+
+	printMessage("Impossible de comprendre votre choix, commecement d'un nouveau tournoi!\n", WARNING);
+	return false;	
 }
 
 void	Tournament::savePlayers() {
@@ -67,16 +83,6 @@ void	Tournament::savePlayers() {
 		else
 			printMessage("Vous pouvez répondre uniquement avec oui (O/OUI/oui) ou non (N/NON/non).", WARNING);
 	}
-}
-
-static bool	isStringNumeric(std::string buffer) {
-	std::string::iterator	it;
-
-	for (it = buffer.begin(); it != buffer.end(); it++)
-		if (!isdigit(*it))
-			return false;
-
-	return true;
 }
 
 void	Tournament::askCourtsNumber() {
@@ -300,6 +306,10 @@ void	Tournament::removePlayerFromWaitingQueue(Player* player) {
 			break ;
 
 	this->_waitingQueue.erase(it);
+}
+
+void	Tournament::setCourts(unsigned int courts) {
+	this->_infos.nbCourts = courts;
 }
 
 unsigned int	Tournament::getNumberOfPlayingMatches() const {

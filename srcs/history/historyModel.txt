@@ -1,13 +1,14 @@
-Don't change order of the model
-The programm will read all of this informations in order of the file
-- List of players
-- Tournament infos
-- Matches in progress
-- Waiting queue
-- List of players (whatever the order)
+// Don't change order of the model
+// The programm will read all of this informations in order of the file
+// - List of players
+// - Tournament infos
+// - Matches in progress
+// - Waiting queue
+// - List of players (whatever the order)
+// All comments lines are ignored
 
-If a player is not define at the end of the file, error occurs
-Save files in /var/logs/usjm_tournament folder
+// If a player is not define when adding matches or check for this player, error occurs
+// Save files in /var/logs/usjm_tournament folder by default
 
 playerList
 {
@@ -31,16 +32,10 @@ matchesInProgress
 	WWW:ZZZ
 }
 
-waitingQueue
-{
-	AAA
-	CCC
-	TTT
-}
-
 XXX
 {
-	name:string
+	totalMatchesPlayed:number
+	totalPointsEarned:number
 
 	scoreHistory
 	{

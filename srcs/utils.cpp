@@ -20,6 +20,16 @@ bool	isStringEmpty(std::string buffer) {
 	return true;
 }
 
+bool	isStringNumeric(std::string buffer) {
+	std::string::iterator	it;
+
+	for (it = buffer.begin(); it != buffer.end(); it++)
+		if (!isdigit(*it))
+			return false;
+
+	return true;
+}
+
 bool	isOui(std::string buffer) {
 	if (buffer.compare("O") == 0)
 		return true;
