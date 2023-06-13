@@ -129,7 +129,6 @@ static void	getMatchesInProgress(Tournament* tournament, std::fstream& file) {
 		}
 		players[0]->initMatch(tournament, players[1], false);
 	}
-	printMessage("Les joueurs ne jouant pas de matchs ont été mis en attente.");
 }
 
 static bool	isPlayerAlreadyRegistred(Player* player, std::vector<Player*>&	registredPlayers) {
@@ -182,7 +181,6 @@ static void	getPlayersHistory(Tournament* tournament, std::fstream& file, std::s
 			if (buffer.compare("}") == 0)
 				break ;
 
-			std::cout << buffer << std::endl;
 			if (!against && buffer.substr(0, buffer.find(':')).compare("against") == 0) {
 				opponent = tournament->findPlayer(buffer.substr(buffer.find(':') + 1));
 				if (!opponent) {
@@ -198,7 +196,6 @@ static void	getPlayersHistory(Tournament* tournament, std::fstream& file, std::s
 				against = false;
 			}
 			else {
-					std::cout << "=> " << buffer << std::endl;
 				printMessage("Une erreur s'est produite lors de la lecture de l'historique des scores du joueur " + player->getName() + ".", ERROR);
 				exit(EXIT_FAILURE);
 			}
@@ -222,21 +219,13 @@ void	getHistory(Tournament* tournament) {
 			continue ;
 
 		removeStringWhitespaces(buffer);
-		if (buffer.compare("playerList") == 0) {
-			printMessage("\nRécupération de la liste des joueurs...");
+		if (buffer.compare("playerList") == 0)
 			getPlayerList(tournament, file);
-		}
-		else if (buffer.compare("tournamentInfos") == 0) {
-			printMessage("\nRécupération des informations du tournois...");
+		else if (buffer.compare("tournamentInfos") == 0)
 			getTournamentInfos(tournament, file);
-		}
-		else if (buffer.compare("matchesInProgress") == 0) {
-			printMessage("\nRécupération des matchs en cours...");
+		else if (buffer.compare("matchesInProgress") == 0)
 			getMatchesInProgress(tournament, file);
-		}
-		else {
-			printMessage("\nRécupération de toutes les informations des joueurs...");
+		else
 			getPlayersHistory(tournament, file, buffer);
-		}
 	}
 }

@@ -5,7 +5,7 @@
 static void	startMatch(Tournament* tournament) {
 	unsigned int					nbWaitingPlayers = tournament->getNumberOfWaitingPlayers();
 	std::vector<Player*>&			waitingQueue = tournament->getWaitingQueue();
-	std::vector<Player*>::iterator	mainIt;
+	std::vector<Player*>::iterator	it;
 
 	if (nbWaitingPlayers <= 1)
 		return (printMessage("Il n'y a pas assez de joueur en fil d'attente pour lancer un match!", ERROR));
@@ -14,14 +14,14 @@ static void	startMatch(Tournament* tournament) {
 		return (printMessage("Tous les terrains sont occupés pour le moment.", ERROR));
 
 	tournament->showMatchs(false);
-	for (mainIt = waitingQueue.begin(); mainIt != waitingQueue.end(); mainIt++) {
+	for (it = waitingQueue.begin(); it != waitingQueue.end(); it++) {
 		if (tournament->getNumberOfWaitingPlayers() <= 1)
 			break ;
 
 		if (tournament->isCourtsFull())
 			break ;
 
-		(*mainIt)->findMatch(tournament);
+		(*it)->findMatch(tournament);
 	}
 	if (nbWaitingPlayers == tournament->getNumberOfWaitingPlayers())
 		printMessage("Aucun match n'a été trouvé, il se peut que tous les joueurs en fil d'attente aient déjà joué entre eux.");

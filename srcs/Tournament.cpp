@@ -44,6 +44,27 @@ bool	Tournament::startWithHistory() {
 	return false;	
 }
 
+static bool	isValidName(std::string name) {
+	std::string::iterator	it;
+
+	if (name.empty())
+		return false;
+
+	if (name.size() == 0)
+		return false;
+
+	if (isStringEmpty(name))
+		return false;
+
+	for (it = name.begin(); it != name.end(); it++) {
+		if (!isalpha((*it)) && (*it) != '.') {
+			printMessage("Le nom du joueur ne peut contenir que des lettres et le caractère \'.\'.", WARNING);
+			return false;
+		}
+	}
+	return true;
+}
+
 void	Tournament::savePlayers() {
 	std::string	buffer;
 
@@ -53,7 +74,7 @@ void	Tournament::savePlayers() {
 		printMessage("Une fois terminé, tapez \"FIN\".");
 	}
 	while (std::getline(std::cin, buffer)) {
-		if (buffer.empty() || buffer.size() == 0 || isStringEmpty(buffer))
+		if (!isValidName(buffer))
 			continue ;
 
 		if (buffer.compare("FIN") == 0)
