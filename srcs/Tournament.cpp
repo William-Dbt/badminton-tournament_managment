@@ -33,7 +33,7 @@ bool	Tournament::isCourtsFull() {
 bool	Tournament::startWithHistory() {
 	std::string	buffer;
 
-	printMessage("Voulez-vous commencer le tournoi à partir d'un historique existant? (O:oui/N:non)");
+	printMessage("Voulez-vous commencer le tournoi à partir d'un historique existant? (O:oui/N:non) ", -1, false);
 	std::getline(std::cin, buffer);
 	if (isOui(buffer))
 		return true;
@@ -69,7 +69,7 @@ void	Tournament::savePlayers() {
 	std::string	buffer;
 
 	if (this->getNumberOfPlayers() == 0) {
-		printMessage("Entrez le nom des joueurs participant au tournoi");
+		printMessage("\nEntrez le nom des joueurs participant au tournoi");
 		printMessage("Si vous souhaitez enlever un participant retapez son nom avec le signe \'-\' devant celui-ci.");
 		printMessage("Une fois terminé, tapez \"FIN\".");
 	}
@@ -85,14 +85,13 @@ void	Tournament::savePlayers() {
 		else
 			this->addPlayer(buffer);
 	}
-	std::cout << std::endl;
 	if (this->getNumberOfPlayers() <= 1) {
 		printMessage("Pas assez de joueurs inscrits pour lancer le tournoi.", ERROR);
 		exit(EXIT_FAILURE);
 	}
 	this->showPlayers();
 
-	std::cout << "Y-a t'il une erreur dans la liste? (O:oui/N:non)" << std::endl;
+	printMessage("Y-a t'il une erreur dans la liste? (O:oui/N:non) ", -1, false);
 	while (std::getline(std::cin, buffer)) {
 		if (isOui(buffer)) {
 			printMessage("Si vous souhaitez enlever un participant retapez son nom avec le signe \'-\' devant celui-ci.");
@@ -110,7 +109,7 @@ void	Tournament::askCourtsNumber() {
 	std::string	buffer;
 
 	std::cout << std::endl;
-	printMessage("Combien de terrains sont disponibles?");
+	printMessage("Combien de terrains sont disponibles? ", -1, false);
 	while (std::getline(std::cin, buffer)) {
 		if (!isStringNumeric(buffer)) {
 			printMessage("Vous ne pouvez entrer que des nombres!", WARNING);
@@ -122,7 +121,7 @@ void	Tournament::askCourtsNumber() {
 		}
 	}
 	std::cout << std::endl << "Nombre de terrains: " << this->_infos.nbCourts << '.' << std::endl;
-	printMessage("Souhaitez vous faire une modification sur le nombre de terrains? (O:oui/N:non)");
+	printMessage("Souhaitez vous faire une modification sur le nombre de terrains? (O:oui/N:non) ", -1, false);
 	while (std::getline(std::cin, buffer)) {
 		if (isOui(buffer))
 			return this->askCourtsNumber();
@@ -152,12 +151,14 @@ void	Tournament::managment() {
 	std::string												buffer;
 	std::map<std::string, void (*)(Tournament*)>::iterator	it;
 
-	printMessage("\nPour gérer la suite du tournoi, plusieurs commandes sont à votre disposition: ");
+	printMessage("\nPour gérer la suite du tournoi, plusieurs commandes sont à votre disposition:");
 	for (it = this->_commands.begin(); it != this->_commands.end(); it++)
 		printMessage("\t" + (*it).first);
 
-	std::cout << std::endl;
 	while (!g_bFinishTournament && std::getline(std::cin, buffer)) {
+		if (isStringEmpty(buffer))
+			continue ;
+
 		try {
 			this->_commands.at(buffer)(this);
 		}
@@ -210,14 +211,17 @@ Player*	Tournament::findPlayer(const std::string name) {
 	return (*it).second;
 }
 
-void	Tournament::showPlayers() {
+void	Tournament::showPlayers(const bool printNumberOfPlayers) {
 	std::map<const std::string, Player*>::iterator	it;
 
 	std::cout << "\nListe des joueurs: \n";
 	for (it = this->_playersList.begin(); it != this->_playersList.end(); it++)
 		std::cout << "- " << (*it).first << '\n';
 
-	std::cout << "Nombre total de joueurs: " << this->getNumberOfPlayers() << '\n' << std::endl;
+	if (printNumberOfPlayers)
+		std::cout << "Nombre total de joueurs: " << this->getNumberOfPlayers() << '\n';
+
+	std::cout << std::endl;
 }
 
 void	Tournament::addMatch(Player* player1, Player* player2) {

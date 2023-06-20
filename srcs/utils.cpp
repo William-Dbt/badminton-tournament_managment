@@ -1,13 +1,15 @@
 #include <iostream>
 #include "utils.hpp"
 
-void	printMessage(const std::string message, const int type) {
+void	printMessage(const std::string message, const int type, const bool newLine) {
 	if (type == WARNING)
 		std::cout << "ATTENTION: ";
 	else if (type == ERROR)
 		std::cout << "ERREUR: ";
 
-	std::cout << message << std::endl;
+	std::cout << message;
+	if (newLine)
+		std::cout << std::endl;
 }
 
 bool	isStringEmpty(std::string buffer) {

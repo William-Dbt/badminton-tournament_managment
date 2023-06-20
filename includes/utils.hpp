@@ -8,7 +8,7 @@ enum messageType {
 	ERROR
 };
 
-void	printMessage(const std::string message, const int type = -1);
+void	printMessage(const std::string message, const int type = -1, const bool newLine = true);
 bool	isStringEmpty(std::string buffer);
 bool	isStringNumeric(std::string buffer);
 bool	isOui(std::string buffer);
