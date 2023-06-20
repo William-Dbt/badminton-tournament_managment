@@ -2,9 +2,48 @@
 #include "utils.hpp"
 #include "Tournament.hpp"
 
+bool	isValidName(std::string name);
+void	startMatch(Tournament* tournament);
+
 static void	addPlayer(Tournament* tournament) {
-	(void)tournament;
-	std::cout << "addPlayer" << std::endl;
+	Player*		player;
+	std::string	buffer;
+
+	printMessage("Entrez le nom du joueur que vous souhaitez ajouter: ", -1, false);
+	std::getline(std::cin, buffer);
+	std::cout << std::endl;
+	player = tournament->findPlayer(buffer, true);
+	if (player) {
+		if (player->getStatus() == STOPPED) {
+			printMessage("Le joueur " + buffer + " existe déjà mais ne participe plus au tournoi, souhaitez-vous le réintégrer à celui-ci? (O:oui/N:non) ", -1, false);
+			std::getline(std::cin, buffer);
+			if (isOui(buffer)) {
+				tournament->addPlayerToWaitingQueue(player);
+				printMessage(player->getName() + " a été ajouté à la file d'attente!");
+			}
+			else
+				return (printMessage("Le joueur " + player->getName() + " restera donc sur le banc de touche."));
+		}
+		else
+			return (printMessage("Le joueur " + player->getName() + " existe déjà!", WARNING));
+	}
+	if (!player && !isValidName(buffer))
+		return ;
+
+	if (buffer[0] == '-')
+		return (printMessage("Le nom du joueur est incorrect! Il ne doit contenir que des lettres et le caractère \'.\'", ERROR));
+
+	if (!player)
+		tournament->addPlayer(buffer);
+
+	if (!player && tournament->findPlayer(buffer) != NULL)
+		printMessage("Le joueur " + buffer + "a bien été ajouté au tournoi!");
+
+	if (tournament->getNumberOfWaitingPlayers() >= 2
+		&& tournament->getNumberOfPlayingMatches() < tournament->getNumberOfCourts()) {
+		printMessage("\nIl semblerait qu'un/des match(s) puisse(nt) être lancé!");
+		startMatch(tournament);
+	}
 }
 
 static void	removePlayer(Tournament* tournament) {

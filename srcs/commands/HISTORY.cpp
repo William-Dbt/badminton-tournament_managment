@@ -10,10 +10,10 @@ void	HISTORY(Tournament* tournament) {
 	std::vector< std::pair<std::string, std::pair<int, int> > >				scoreHistory;
 	std::vector< std::pair<std::string, std::pair<int, int> > >::iterator	it;
 
-	tournament->showPlayers(false);
+	tournament->showPlayers(false, true);
 	printMessage("Indiquez le nom du joueur dont vous voulez voir l'historique: ", -1, false);
 	std::getline(std::cin, buffer);
-	player = tournament->findPlayer(buffer);
+	player = tournament->findPlayer(buffer, true);
 	if (player == NULL)
 		return printMessage("Le joueur " + buffer + " n'a pas été trouvé!", ERROR);
 

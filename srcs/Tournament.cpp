@@ -46,7 +46,7 @@ bool	Tournament::startWithHistory() {
 	return false;	
 }
 
-static bool	isValidName(std::string name) {
+bool	isValidName(std::string name) {
 	std::string::iterator	it;
 
 	if (name.empty())
@@ -182,7 +182,6 @@ void	Tournament::managment() {
 void	Tournament::addPlayer(const std::string name) {
 	Player*	player;
 
-	// Check if player status is STOPPED, if it exists and status is STOPPED just move in the waiting queue
 	if (this->_playersList.find(name) != this->_playersList.end())
 		return (printMessage("Le joueur " + name + " existe déjà.", ERROR));
 
@@ -251,22 +250,28 @@ Player*	Tournament::findPlayer(const std::string name, const bool evenIfNotParti
 	if (it == this->_playersList.end())
 		return NULL;
 
-	if (evenIfNotParticipate)
+	if (!evenIfNotParticipate)
 		if ((*it).second->getStatus() == STOPPED || (*it).second->getStatus() == FINISHED)
 			return NULL;
 
 	return (*it).second;
 }
 
-void	Tournament::showPlayers(const bool printNumberOfPlayers) {
+void	Tournament::showPlayers(const bool printNumberOfPlayers, const bool printNotParticipatingPlayers) {
 	std::map<const std::string, Player*>::iterator	it;
 
 	std::cout << "\nListe des joueurs: \n";
 	for (it = this->_playersList.begin(); it != this->_playersList.end(); it++) {
-		if ((*it).second->getStatus() == STOPPED || (*it).second->getStatus() == FINISHED)
+		if (!printNotParticipatingPlayers && ((*it).second->getStatus() == STOPPED || (*it).second->getStatus() == FINISHED))
 			continue ;
 
-		std::cout << "- " << (*it).first << '\n';
+		std::cout << "- " << (*it).first;
+		if ((*it).second->getStatus() == FINISHED)
+			std::cout << " (a fini tous ses matchs)";
+		else if ((*it).second->getStatus() == STOPPED)
+			std::cout << " (ne participe plus au tournoi)";
+
+		std::cout << '\n';
 	}
 	if (printNumberOfPlayers)
 		std::cout << "Nombre total de joueurs: " << this->getNumberOfPlayers() << '\n';
