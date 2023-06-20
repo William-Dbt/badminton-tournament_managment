@@ -57,6 +57,9 @@ static bool	isValidName(std::string name) {
 		return false;
 
 	for (it = name.begin(); it != name.end(); it++) {
+		if (it == name.begin() && (*it) == '-')
+			continue ;
+
 		if (!isalpha((*it)) && (*it) != '.') {
 			printMessage("Le nom du joueur ne peut contenir que des lettres et le caractère \'.\'.", WARNING);
 			return false;
