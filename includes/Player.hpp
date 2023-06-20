@@ -9,6 +9,7 @@ class Tournament;
 enum	e_status {
 	WAITING = 0,
 	INGAME,
+	STOPPED,
 	FINISHED	//TODO
 };
 

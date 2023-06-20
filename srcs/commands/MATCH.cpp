@@ -2,7 +2,7 @@
 #include "utils.hpp"
 #include "Tournament.hpp"
 
-static void	startMatch(Tournament* tournament) {
+void	startMatch(Tournament* tournament) {
 	unsigned int					nbWaitingPlayers = tournament->getNumberOfWaitingPlayers();
 	std::vector<Player*>&			waitingQueue = tournament->getWaitingQueue();
 	std::vector<Player*>::iterator	it;
@@ -66,7 +66,7 @@ static void	finishMatch(Tournament* tournament) {
 	std::getline(std::cin, buffer);
 	match = tournament->findMatchByPlayer(tournament->findPlayer(buffer));
 	if (match.first == NULL)
-		return (printMessage("Le participant " + buffer + " n'a été trouvé dans aucun match!", WARNING));
+		return (printMessage("Le participant \'" + buffer + "\' n'a été trouvé dans aucun match!", WARNING));
 
 	printMessage("Indiquez le score des joueurs au format suivant:");
 	printMessage("\t\'score de " + match.first->getName() + "\'-\'score de " + match.second->getName() + "\' sans les guillemets.");

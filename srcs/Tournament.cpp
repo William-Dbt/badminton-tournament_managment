@@ -6,12 +6,14 @@
 #include "Tournament.hpp"
 
 void	getHistory(Tournament* tournament);
+void	startMatch(Tournament* tournament);
 
 bool	g_bFinishTournament = false;
 
 Tournament::Tournament() {
 	this->_commands["MATCH"] = MATCH;
 	this->_commands["INFOS"] = INFOS;
+	this->_commands["PLAYER"] = PLAYER;
 	this->_commands["HISTORY"] = HISTORY;
 	this->_commands["FINISH"] = FINISH;
 }
@@ -84,7 +86,7 @@ void	Tournament::savePlayers() {
 			break ;
 
 		if (buffer[0] == '-')
-			this->removePlayer(buffer.c_str() + 1);
+			this->removePlayer(buffer.c_str() + 1, false);
 		else
 			this->addPlayer(buffer);
 	}
@@ -166,7 +168,7 @@ void	Tournament::managment() {
 			this->_commands.at(buffer)(this);
 		}
 		catch (std::exception &e) {
-			printMessage("La commande " + buffer + " n'existe pas!", WARNING);
+			printMessage("La commande \'" + buffer + "\' n'existe pas!", WARNING);
 		}
 		if (g_bFinishTournament)
 			break ;
@@ -180,36 +182,78 @@ void	Tournament::managment() {
 void	Tournament::addPlayer(const std::string name) {
 	Player*	player;
 
-	if (this->_playersList.find(name) != this->_playersList.end()) {
-		printMessage("Le joueur " + name + " existe déjà.", ERROR);
-		return ;
-	}
+	// Check if player status is STOPPED, if it exists and status is STOPPED just move in the waiting queue
+	if (this->_playersList.find(name) != this->_playersList.end())
+		return (printMessage("Le joueur " + name + " existe déjà.", ERROR));
+
 	player = new Player(name);
 	this->_playersList.insert(std::make_pair(name, player));
 	this->addPlayerToWaitingQueue(player);
 }
 
-void	Tournament::removePlayer(const std::string name) {
+void	Tournament::removePlayer(const std::string name, const bool isTournamentStarted) {
+	bool		isMatchStopped = false;
+	std::string	buffer;
+	Player*		player;
+	std::pair<Player*, Player*>	match;
+
 	std::map<const std::string, Player*>::iterator	itPlayer;
 
 	itPlayer = this->_playersList.find(name);
-	if (itPlayer == this->_playersList.end()) {
-		printMessage("Le joueur " + name + " n'existe pas.", WARNING);
-		return ;
-	}
-	if (this->isPlayerInWaitingQueue((*itPlayer).second))
-		this->removePlayerFromWaitingQueue((*itPlayer).second);
+	if (itPlayer == this->_playersList.end())
+		return (printMessage("Le joueur \'" + name + "\' n'existe pas.", WARNING));
 
-	delete this->_playersList[name];
-	this->_playersList.erase(name);
+	player = (*itPlayer).second;
+	if (player->getStatus() == FINISHED || player->getStatus() == STOPPED)
+		return printMessage("Le joueur ne participe plus au tournoi, impossible de le supprimer.", ERROR);
+
+	if (isTournamentStarted) {
+		printMessage("Êtes-vous sûr de vouloir supprimer le joueur " + name + "? (O:oui/N:non)");
+		printMessage("Si le joueur est dans un match, ce dernier ne sera pas pris en compte pour les deux joueurs.");
+		std::getline(std::cin, buffer);
+		if (!isOui(buffer))
+			return ;
+	}
+	match = this->findMatchByPlayer(player);
+	if (match.first != NULL) {
+		printMessage("Suppression du match entre " + match.first->getName() + " et " + match.second->getName() + ".");
+		this->removeMatch(match);
+		if (player != match.first)
+			this->addPlayerToWaitingQueue(match.first);
+		else
+			this->addPlayerToWaitingQueue(match.second);
+
+		isMatchStopped = true;
+	}
+	if (this->isPlayerInWaitingQueue(player))
+		this->removePlayerFromWaitingQueue(player);
+
+	player->setStatus(STOPPED);
+	if (!isTournamentStarted || player->getScoreHistory().empty()) {
+		delete this->_playersList[name];
+		this->_playersList.erase(name);
+	}
+	printMessage("Le joueur " + name + " a été enlevé du tournoi!");
+	if (this->getNumberOfPlayers() <= 1) {
+		g_bFinishTournament = true;
+		return printMessage("\nIl n'y a plus assez de joueur en liste pour continuer le tournoi!");
+	}
+	if (isMatchStopped) {
+		printMessage("\nUn match en cours a été stoppé, esseyons d'en lancer un autre!");
+		startMatch(this);
+	}
 }
 
-Player*	Tournament::findPlayer(const std::string name) {
+Player*	Tournament::findPlayer(const std::string name, const bool evenIfNotParticipate) {
 	std::map<const std::string, Player*>::iterator	it;
 
 	it = this->_playersList.find(name);
 	if (it == this->_playersList.end())
 		return NULL;
+
+	if (evenIfNotParticipate)
+		if ((*it).second->getStatus() == STOPPED || (*it).second->getStatus() == FINISHED)
+			return NULL;
 
 	return (*it).second;
 }
@@ -218,9 +262,12 @@ void	Tournament::showPlayers(const bool printNumberOfPlayers) {
 	std::map<const std::string, Player*>::iterator	it;
 
 	std::cout << "\nListe des joueurs: \n";
-	for (it = this->_playersList.begin(); it != this->_playersList.end(); it++)
-		std::cout << "- " << (*it).first << '\n';
+	for (it = this->_playersList.begin(); it != this->_playersList.end(); it++) {
+		if ((*it).second->getStatus() == STOPPED || (*it).second->getStatus() == FINISHED)
+			continue ;
 
+		std::cout << "- " << (*it).first << '\n';
+	}
 	if (printNumberOfPlayers)
 		std::cout << "Nombre total de joueurs: " << this->getNumberOfPlayers() << '\n';
 
@@ -344,8 +391,16 @@ unsigned int	Tournament::getNumberOfPlayingMatches() const {
 	return this->_matchsInProgress.size();
 }
 
-unsigned int	Tournament::getNumberOfPlayers() const {
-	return this->_playersList.size();
+unsigned int	Tournament::getNumberOfPlayers() {
+	unsigned int	i = 0;
+
+	std::map<const std::string, Player*>::iterator	it;
+
+	for (it = this->_playersList.begin(); it != this->_playersList.end(); it++)
+		if ((*it).second->getStatus() != STOPPED && (*it).second->getStatus() != FINISHED)
+			i++;
+
+	return i;
 }
 
 unsigned int	Tournament::getNumberOfWaitingPlayers() const {

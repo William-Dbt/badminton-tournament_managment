@@ -22,8 +22,8 @@ class   Tournament {
 		void	managment();
 
 		void	addPlayer(const std::string name);
-		void	removePlayer(const std::string name);
-		Player*	findPlayer(const std::string name);
+		void	removePlayer(const std::string name, const bool isTournamentStarted = true);
+		Player*	findPlayer(const std::string name, const bool evenIfNotParticipate = false);
 		void	showPlayers(const bool printNumberOfPlayers = true);
 
 		void						addMatch(Player* player1, Player* player2);
@@ -38,7 +38,7 @@ class   Tournament {
 		void	setCourts(unsigned int courts);
 
 		unsigned int								getNumberOfPlayingMatches() const;
-		unsigned int								getNumberOfPlayers() const;
+		unsigned int								getNumberOfPlayers();
 		unsigned int								getNumberOfWaitingPlayers() const;
 		unsigned int								getNumberOfCourts() const;
 		std::vector< std::pair<Player*, Player*> >&	getMatchsInProgress();
@@ -60,6 +60,7 @@ class   Tournament {
 
 void	MATCH(Tournament* tournament);
 void	INFOS(Tournament* tournament);
+void	PLAYER(Tournament* tournament);
 void	HISTORY(Tournament* tournament);
 void	FINISH(Tournament* tournament);
 
