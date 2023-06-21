@@ -26,7 +26,8 @@ class   Player {
 		void	addScoreMatch(std::string opponent, std::pair<int, int> score);
 
 		void			showScoreHistory();
-		unsigned int	getTotalScore();
+		unsigned int	getTotalScore(int limitOfMatches = 0);
+		int				getNbOfMatches() const;
 
 		void    setName(const std::string& name);
 		void	setStatus(const int status);

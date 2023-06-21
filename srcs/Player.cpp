@@ -98,7 +98,8 @@ void	Player::showScoreHistory() {
 	printMessage("----------------------------------------");
 }
 
-unsigned int	Player::getTotalScore() {
+unsigned int	Player::getTotalScore(int limitOfMatches) {
+	int				i = 0;
 	unsigned int	totalScore = 0;
 
 	std::pair<int, int>														score;
@@ -108,10 +109,17 @@ unsigned int	Player::getTotalScore() {
 		return 0;
 
 	for (it = this->_scoreHistory.begin(); it != this->_scoreHistory.end(); it++) {
+		if (limitOfMatches && i++ == limitOfMatches)
+			break ;
+
 		score = (*it).second;
 		totalScore += score.first;
 	}
 	return totalScore;
+}
+
+int	Player::getNbOfMatches() const {
+	return this->_nbMatches;
 }
 
 void    Player::setName(const std::string& name) {

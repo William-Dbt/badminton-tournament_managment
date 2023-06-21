@@ -5,16 +5,7 @@
 
 void	saveHistory(Tournament* tournament);
 void	getHistory(Tournament* tournament);
-
-static void	showScoreHistoryOfAllPlayers(std::map<const std::string, Player*>& playerList) {
-	std::map<const std::string, Player*>::iterator	it;
-
-	std::cout << std::endl;
-	for (it = playerList.begin(); it != playerList.end(); it++) {
-		(*it).second->showScoreHistory();
-		std::cout << std::endl;
-	}
-}
+void	showEndHistory(Tournament* tournament);
 
 static void	mainMessage() {
 	std::cout << "########################################\n";
@@ -45,7 +36,7 @@ int	main() {
 	tournament.showMatchs();
 	tournament.managment();
 
-	showScoreHistoryOfAllPlayers(tournament.getPlayersList());
 	saveHistory(&tournament);
+	showEndHistory(&tournament);
 	return 0;
 }

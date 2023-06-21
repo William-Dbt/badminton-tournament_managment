@@ -23,7 +23,7 @@ PATHNULL	= /dev/null
 SRCS		= $(addprefix ${PATHSRCS}, main.cpp Tournament.cpp Player.cpp utils.cpp) \
 			$(addprefix ${PATHSRCS}commands/, MATCH.cpp INFOS.cpp PLAYER.cpp FINISH.cpp \
 											HISTORY.cpp) \
-			$(addprefix ${PATHSRCS}history/, saveHistory.cpp getHistory.cpp)
+			$(addprefix ${PATHSRCS}history/, saveHistory.cpp getHistory.cpp showEndHistory.cpp)
 
 
 OBJS		= ${SRCS:.cpp=.o}

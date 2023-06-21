@@ -245,10 +245,7 @@ void	getHistory(Tournament* tournament) {
 		else
 			getPlayersHistory(tournament, file, buffer);
 	}
-	for (it = tournament->getPlayersList().begin(); it != tournament->getPlayersList().end(); it++) {
-		if (tournament->isPlayerInWaitingQueue((*it).second) && ((*it).second->getStatus() == STOPPED || (*it).second->getStatus() == FINISHED)) {
-			std::cout << "Player: " << (*it).second->getName() << std::endl;
+	for (it = tournament->getPlayersList().begin(); it != tournament->getPlayersList().end(); it++)
+		if (tournament->isPlayerInWaitingQueue((*it).second) && ((*it).second->getStatus() == STOPPED || (*it).second->getStatus() == FINISHED))
 			tournament->removePlayerFromWaitingQueue((*it).second);
-		}
-	}
 }

@@ -103,5 +103,5 @@ void	saveHistory(Tournament* tournament) {
 	saveTournament(file, tournament->getNumberOfCourts());
 	saveMatchesInProgress(file, tournament->getMatchsInProgress());
 	savePlayersHistory(file, tournament->getPlayersList());
-	printMessage("Les logs du tournoi sont enregistrés dans le fichier suivant: " + filePathName + ".");
+	printMessage("Les logs du tournoi sont enregistrés dans le fichier suivant: " + filePathName + ".\n");
 }

@@ -35,11 +35,13 @@ class   Tournament {
 		void	addPlayerToWaitingQueue(Player* player);
 		void	removePlayerFromWaitingQueue(Player* player);
 
+		unsigned int		getNumberOfPlayingMatches() const;
+		unsigned int		getNumberOfPlayers();
+		unsigned int		getNumberOfWaitingPlayers() const;
+		std::pair<int, int>	getNumberOfMaxMinPlayedMatches(bool considereStoppedPlayers);
+
 		void	setCourts(unsigned int courts);
 
-		unsigned int								getNumberOfPlayingMatches() const;
-		unsigned int								getNumberOfPlayers();
-		unsigned int								getNumberOfWaitingPlayers() const;
 		unsigned int								getNumberOfCourts() const;
 		std::vector< std::pair<Player*, Player*> >&	getMatchsInProgress();
 		std::vector<Player*>&						getWaitingQueue();

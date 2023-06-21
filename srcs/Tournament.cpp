@@ -412,6 +412,32 @@ unsigned int	Tournament::getNumberOfWaitingPlayers() const {
 	return this->_waitingQueue.size();
 }
 
+std::pair<int, int>	Tournament::getNumberOfMaxMinPlayedMatches(bool considereStoppedPlayers) {
+	int		nbMinMatches = -1;
+	int		nbMaxMatches = -1;
+	Player*	player;
+
+	std::map<const std::string, Player*>::iterator	it;
+
+	for (it = this->_playersList.begin(); it != this->_playersList.end(); it++) {
+		player = (*it).second;
+		if (!considereStoppedPlayers && player->getStatus() == STOPPED)
+			continue ;
+
+		if (nbMinMatches == -1 && nbMaxMatches == -1) {
+			nbMinMatches = player->getNbOfMatches();
+			nbMaxMatches = player->getNbOfMatches();
+			continue ;
+		}
+		if (player->getNbOfMatches() < nbMinMatches)
+			nbMinMatches = player->getNbOfMatches();
+
+		if (player->getNbOfMatches() > nbMaxMatches)
+			nbMaxMatches = player->getNbOfMatches();
+	}
+	return (std::make_pair(nbMinMatches, nbMaxMatches));
+}
+
 unsigned int	Tournament::getNumberOfCourts() const {
 	return this->_infos.nbCourts;
 }
