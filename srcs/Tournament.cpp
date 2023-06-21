@@ -372,7 +372,7 @@ void	Tournament::removePlayerFromWaitingQueue(Player* player) {
 	if (player == NULL)
 		return ;
 
-	if (player->getStatus() != WAITING)
+	if (player->getStatus() == INGAME)
 		return ;
 
 	if (this->_waitingQueue.size() == 0)

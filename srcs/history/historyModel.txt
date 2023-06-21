@@ -34,8 +34,7 @@ matchesInProgress
 
 XXX
 {
-	totalMatchesPlayed:number
-	totalPointsEarned:number
+	status:stopped/finished/auto
 
 	scoreHistory
 	{

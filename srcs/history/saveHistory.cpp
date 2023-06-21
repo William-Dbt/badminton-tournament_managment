@@ -65,11 +65,16 @@ static void	savePlayersHistory(std::fstream& file, std::map<const std::string, P
 		player = (*it).second;
 		file << (*it).first << '\n';
 		file << "{\n";
-		scoreHistory = player->getScoreHistory();
-		file << "\ttotalMatchesPlayed:" << scoreHistory.size() << '\n';
-		file << "\ttotalPointsEarned:" << player->getTotalScore() << "\n\n";
+		file << "\tstatus:";
+		if (player->getStatus() == FINISHED || player->getStatus() == STOPPED)
+			(player->getStatus() == FINISHED) ? file << "finished\n" : file << "stopped\n";
+		else
+			file << "auto\n";
+
+		file << '\n';
 		file << "\tscoreHistory\n";
 		file << "\t{\n";
+		scoreHistory = player->getScoreHistory();
 		for (itScore = scoreHistory.begin(); itScore != scoreHistory.end(); itScore++) {
 			file << "\t\tagainst:" << (*itScore).first << '\n';
 			file << "\t\tscore:" << (*itScore).second.first << '-' << (*itScore).second.second << '\n';

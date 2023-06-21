@@ -117,12 +117,12 @@ static void	getMatchesInProgress(Tournament* tournament, std::fstream& file) {
 		}
 		playerName[0] = buffer.substr(0, buffer.find(':'));
 		playerName[1] = buffer.substr(buffer.find(':') + 1);
-		players[0] = tournament->findPlayer(playerName[0]);
+		players[0] = tournament->findPlayer(playerName[0], true);
 		if (!players[0]) {
 			printMessage("Le joueur " + playerName[0] + " n'a pas été trouvé dans la liste des joueurs.", ERROR);
 			exit(EXIT_FAILURE);
 		}
-		players[1] = tournament->findPlayer(playerName[1]);
+		players[1] = tournament->findPlayer(playerName[1], true);
 		if (!players[1]) {
 			printMessage("Le joueur " + playerName[1] + " n'a pas été trouvé dans la liste des joueurs.", ERROR);
 			exit(EXIT_FAILURE);
@@ -157,7 +157,7 @@ static void	getPlayersHistory(Tournament* tournament, std::fstream& file, std::s
 		if (buffer.compare("}") == 0)
 			break ;
 
-		player = tournament->findPlayer(buffer);
+		player = tournament->findPlayer(buffer, true);
 		if (!player) {
 			printMessage("Le joueur " + buffer + " n'est pas connu du tournoi.", ERROR);
 			exit(EXIT_FAILURE);
@@ -169,6 +169,19 @@ static void	getPlayersHistory(Tournament* tournament, std::fstream& file, std::s
 		registredPlayers.push_back(player);
 		while (std::getline(file, buffer)) {
 			removeStringWhitespaces(buffer);
+			if (buffer.find(":") != std::string::npos) {
+				if (buffer.substr(0, buffer.find(":")).compare("status") == 0) {
+					parameter = buffer.substr(buffer.find(":") + 1);
+					if (parameter.compare("auto") == 0)
+						continue ;
+
+					if (parameter.compare("stopped") != 0 && parameter.compare("finished") != 0) {
+						printMessage("Le status " + parameter + " n'est pas connu!", ERROR);
+						exit(EXIT_FAILURE);
+					}
+					(parameter.compare("stopped") == 0) ? player->setStatus(STOPPED) : player->setStatus(FINISHED);
+				}
+			}
 			if (buffer.compare("scoreHistory") == 0)
 				break ;
 		}
@@ -182,11 +195,13 @@ static void	getPlayersHistory(Tournament* tournament, std::fstream& file, std::s
 				break ;
 
 			if (!against && buffer.substr(0, buffer.find(':')).compare("against") == 0) {
-				opponent = tournament->findPlayer(buffer.substr(buffer.find(':') + 1));
+				opponent = tournament->findPlayer(buffer.substr(buffer.find(':') + 1), true);
 				if (!opponent) {
 					printMessage("Le joueur " + buffer.substr(buffer.find(':') + 1) + "n'est pas inscrit au tournoi.", ERROR);
 					exit(EXIT_FAILURE);
 				}
+				player->addToListAlreadyPlayed(opponent);
+				opponent->addToListAlreadyPlayed(player);
 				against = true;
 			}
 			else if (against && buffer.substr(0, buffer.find(':')).compare("score") == 0) {
@@ -207,7 +222,9 @@ void	getHistory(Tournament* tournament) {
 	std::string		buffer;
 	std::fstream	file;
 
-	printMessage("Indiquez le nom du fichier d'historique que vous souhaitez utiliser: ");
+	std::map<const std::string, Player*>::iterator	it;
+
+	printMessage("Indiquez le nom du fichier d'historique que vous souhaitez utiliser: ", -1, false);
 	std::getline(std::cin, buffer);
 	file.open(buffer, std::fstream::in);
 	if (!file.is_open()) {
@@ -227,5 +244,11 @@ void	getHistory(Tournament* tournament) {
 			getMatchesInProgress(tournament, file);
 		else
 			getPlayersHistory(tournament, file, buffer);
+	}
+	for (it = tournament->getPlayersList().begin(); it != tournament->getPlayersList().end(); it++) {
+		if (tournament->isPlayerInWaitingQueue((*it).second) && ((*it).second->getStatus() == STOPPED || (*it).second->getStatus() == FINISHED)) {
+			std::cout << "Player: " << (*it).second->getName() << std::endl;
+			tournament->removePlayerFromWaitingQueue((*it).second);
+		}
 	}
 }
