@@ -13,9 +13,9 @@ bool	g_bFinishTournament = false;
 Tournament::Tournament() {
 	this->_commands["MATCH"] = MATCH;
 	this->_commands["INFOS"] = INFOS;
-	this->_commands["PLAYER"] = PLAYER;
-	this->_commands["HISTORY"] = HISTORY;
-	this->_commands["FINISH"] = FINISH;
+	this->_commands["JOUEUR"] = PLAYER;
+	this->_commands["HISTORIQUE"] = HISTORY;
+	this->_commands["FIN"] = FINISH;
 }
 
 Tournament::~Tournament() {
