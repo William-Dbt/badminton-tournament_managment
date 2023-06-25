@@ -175,4 +175,5 @@ void	showEndHistory(Tournament* tournament) {
 	showSecondPlayers(totalScorePerPlayer);
 	std::cout << std::endl;
 	showThirdPlayers(tournament, totalScorePerPlayer);
+	
 }
