@@ -18,12 +18,11 @@ The program is interactive, it will first ask you the list of players and the nu
 Once the tournament is started, you can do some actions on it as:  
 - **MATCH**, it will start a match or finish one, the program ask for name of a player in active match, if no one is started it will try to start one.  
 - **INFOS**, it shows the matches in progress and the players waiting list.  
-- **PLAYER**, it allows you to add or remove a player in the middle of the tournament.  
-- **HISTORY**, it asks for the name of a player to show its history (played matches, points ...).  
-- **FINISH**, use it to finish the tournament.  
+- **JOUEUR**, it allows you to add or remove a player in the middle of the tournament.  
+- **HISTORIQUE**, it asks for the name of a player to show its history (played matches, points ...).  
+- **FIN**, use it to finish the tournament.  
 
 ## Notes
 
 The program print messages in french because it will be used by french ones.  
 In the future multiple modes will be managed.  
-
