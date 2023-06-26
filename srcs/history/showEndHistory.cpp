@@ -81,6 +81,54 @@ static int	getMaxScore(std::vector< std::pair<std::string, int> >& totalScorePer
 	return score;
 }
 
+static void	printPosition(int position, std::vector< std::pair<std::string, int> > playerList) {
+	std::vector< std::pair<std::string, int> >::iterator	it;
+
+	static std::vector< std::pair<std::string, int> >	savedFirstPlayerList;
+
+	if (position == 1) {
+		savedFirstPlayerList = playerList;
+		return ;
+	}
+	else if (position == 2) {
+		std::cout << "‾‾‾‾‾‾‾|\n";
+		for (it = playerList.begin(); it != playerList.end(); it++) {
+			if (it == playerList.begin())
+				std::cout << "  2nd  | " << (*it).first << " (" << (*it).second << ")\n";
+			else
+				std::cout << "       | " << (*it).first << '\n';
+		}
+		std::cout << "       |\n";
+		std::cout << "‾‾‾‾‾‾‾‾‾‾|\n";
+		for (it = savedFirstPlayerList.begin(); it != savedFirstPlayerList.end(); it++) {
+			if (it == savedFirstPlayerList.begin())
+				std::cout << "    1st   | " << (*it).first << " (" << (*it).second << ")\n";
+			else
+				std::cout << "          | " << (*it).first << '\n';
+		}
+		std::cout << "          |\n";
+	}
+	else if (position == 3) {
+		std::cout << "‾‾‾‾‾|‾‾‾‾\n";
+		for (it = playerList.begin(); it != playerList.end(); it++) {
+			if (it == playerList.begin())
+				std::cout << " 3rd | " << (*it).first << " (" << (*it).second << ")\n";
+			else
+				std::cout << "     | " << (*it).first << '\n';
+		}
+		std::cout << "     |\n";
+		std::cout << "‾‾‾‾‾" << std::endl;
+	}
+	else {
+		for (it = playerList.begin(); it != playerList.end(); it++) {
+			if (it == playerList.begin())
+				std::cout << '(' << position << ") " << (*it).first << " | " << (*it).second << "pts" << std::endl;
+			else
+				std::cout << ((position > 10) ? "(**) " : "(*) ") << (*it).first << std::endl;
+		}
+	}
+}
+
 static void	showPositions(std::vector< std::pair<std::string, int> >& totalScorePerPlayer, int playerPos, int lastPlayerScore) {
 	int			currentScore;
 	int			lastScore = -1;
@@ -101,10 +149,8 @@ static void	showPositions(std::vector< std::pair<std::string, int> >& totalScore
 		if ((*it).second == lastPlayerScore)
 			playerList.push_back(*it);
 
-	for (it = playerList.begin(); it != playerList.end(); it++) {
-		totalPlayer--;
-		std::cout << playerPos << ": " << (*it).first << " avec " << (*it).second << " points." << std::endl;
-	}
+	printPosition(playerPos, playerList);
+	totalPlayer -= playerList.size();
 	if (totalPlayer > 0)
 		showPositions(totalScorePerPlayer, ++playerPos, lastPlayerScore);
 }
@@ -114,5 +160,6 @@ void	showEndHistory(Tournament* tournament) {
 
 	getTournamentVars(tournament);
 	getTotalScorePerPlayer(tournament, totalScorePerPlayer);
+	std::cout << std::endl;
 	showPositions(totalScorePerPlayer, 1, getMaxScore(totalScorePerPlayer));
 }
