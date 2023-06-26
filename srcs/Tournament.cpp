@@ -42,7 +42,7 @@ bool	Tournament::startWithHistory() {
 	else if (isNon(buffer))
 		return false;
 
-	printMessage("Impossible de comprendre votre choix, commecement d'un nouveau tournoi!\n", WARNING);
+	printMessage("Impossible de comprendre votre choix, commencement d'un nouveau tournoi!\n", WARNING);
 	return false;	
 }
 

@@ -7,10 +7,6 @@
 typedef struct	s_historyVars {
 	bool			isStoppedPlayerConsidered;
 	unsigned int	nbMatchsConsidered;
-	
-	int	firstScore;
-	int	secondScore;
-	int	thirdScore;
 }	t_historyVars;
 
 t_historyVars	g_sTournamentVars;
@@ -69,111 +65,112 @@ static void	getTotalScorePerPlayer(Tournament* tournament, std::vector< std::pai
 	}
 }
 
-static void	showFirstPlayers(std::vector< std::pair<std::string, int> >& totalScorePerPlayer) {
-	int	tmpMaxScore = -1;
+// static void	showFirstPlayers(std::vector< std::pair<std::string, int> >& totalScorePerPlayer) {
+// 	int	tmpMaxScore = -1;
 
-	std::vector< std::pair<std::string, int> >				firstPlayers;
+// 	std::vector< std::pair<std::string, int> >				firstPlayers;
+// 	std::vector< std::pair<std::string, int> >::iterator	it;
+
+// 	for (it = totalScorePerPlayer.begin(); it != totalScorePerPlayer.end(); it++) {
+// 		if (tmpMaxScore == -1) {
+// 			tmpMaxScore = (*it).second;
+// 			continue ;
+// 		}
+// 		if ((*it).second > tmpMaxScore)
+// 			tmpMaxScore = (*it).second;
+// 	}
+// 	for (it = totalScorePerPlayer.begin(); it != totalScorePerPlayer.end(); it++)
+// 		if ((*it).second == tmpMaxScore)
+// 			firstPlayers.push_back(*it);
+
+// 	printMessage("Avec un score de " + std::to_string(tmpMaxScore) + " la première place reviens à:");
+// 	for (it = firstPlayers.begin(); it != firstPlayers.end(); it++)
+// 		std::cout << (*it).first << std::endl;
+
+// 	g_sTournamentVars.firstScore = tmpMaxScore;
+// }
+
+// static void	showThirdPlayers(Tournament* tournament, std::vector< std::pair<std::string, int> >& totalScorePerPlayer) {
+// 	int	tmpMaxScore = -1;
+
+// 	std::vector< std::pair<std::string, int> >				thirdPlayers;
+// 	std::vector< std::pair<std::string, int> >::iterator	it;
+
+// 	if (tournament->getNumberOfPlayers() < 3)
+// 		return ;
+
+// 	for (it = totalScorePerPlayer.begin(); it != totalScorePerPlayer.end(); it++) {
+// 		if (tmpMaxScore == -1) {
+// 			if ((*it).second < g_sTournamentVars.secondScore)
+// 				tmpMaxScore = (*it).second;
+
+// 			continue ;
+// 		}
+// 		if ((*it).second > tmpMaxScore && (*it).second < g_sTournamentVars.secondScore)
+// 			tmpMaxScore = (*it).second;
+// 	}
+// 	if (tmpMaxScore == -1)
+// 		return ;
+
+// 	for (it = totalScorePerPlayer.begin(); it != totalScorePerPlayer.end(); it++)
+// 		if ((*it).second == tmpMaxScore)
+// 			thirdPlayers.push_back(*it);
+
+// 	printMessage("Avec un score de " + std::to_string(tmpMaxScore) + " la troisième place reviens à:");
+// 	for (it = thirdPlayers.begin(); it != thirdPlayers.end(); it++)
+// 		std::cout << (*it).first << std::endl;
+
+// 	g_sTournamentVars.thirdScore = tmpMaxScore;
+// }
+
+static int	getMaxScore(std::vector< std::pair<std::string, int> >& totalScorePerPlayer) {
+	int	score = -1;
+
 	std::vector< std::pair<std::string, int> >::iterator	it;
 
 	for (it = totalScorePerPlayer.begin(); it != totalScorePerPlayer.end(); it++) {
-		if (tmpMaxScore == -1) {
-			tmpMaxScore = (*it).second;
+		if (score == -1) {
+			score = (*it).second;
 			continue ;
 		}
-		if ((*it).second > tmpMaxScore)
-			tmpMaxScore = (*it).second;
+		if ((*it).second > score)
+			score = (*it).second;
 	}
-	for (it = totalScorePerPlayer.begin(); it != totalScorePerPlayer.end(); it++)
-		if ((*it).second == tmpMaxScore)
-			firstPlayers.push_back(*it);
-
-	printMessage("Avec un score de " + std::to_string(tmpMaxScore) + " la première place reviens à:");
-	for (it = firstPlayers.begin(); it != firstPlayers.end(); it++)
-		std::cout << (*it).first << std::endl;
-
-	g_sTournamentVars.firstScore = tmpMaxScore;
+	return score;
 }
 
-static void	showSecondPlayers(std::vector< std::pair<std::string, int> >& totalScorePerPlayer) {
-	int	tmpMaxScore = -1;
+static void	showPositions(std::vector< std::pair<std::string, int> >& totalScorePerPlayer, int playerPos, int lastPlayerScore) {
+	int			currentScore;
+	int			lastScore = -1;
+	static int	totalPlayer = totalScorePerPlayer.size();
 
-	std::vector< std::pair<std::string, int> >				secondPlayers;
+	std::vector< std::pair<std::string, int> >				playerList;
 	std::vector< std::pair<std::string, int> >::iterator	it;
 
-	for (it = totalScorePerPlayer.begin(); it != totalScorePerPlayer.end(); it++) {
-		if (tmpMaxScore == -1) {
-			if ((*it).second < g_sTournamentVars.firstScore)
-				tmpMaxScore = (*it).second;
-
-			continue ;
+	if (playerPos != 1) {
+		for (it = totalScorePerPlayer.begin(); it != totalScorePerPlayer.end(); it++) {
+			currentScore = (*it).second;
+			if (currentScore > lastScore && currentScore < lastPlayerScore)
+				lastScore = currentScore;
 		}
-		if ((*it).second > tmpMaxScore && (*it).second < g_sTournamentVars.firstScore)
-			tmpMaxScore = (*it).second;
+		lastPlayerScore = lastScore;
 	}
-	if (tmpMaxScore == -1)
-		return ;
-
 	for (it = totalScorePerPlayer.begin(); it != totalScorePerPlayer.end(); it++)
-		if ((*it).second == tmpMaxScore)
-			secondPlayers.push_back(*it);
+		if ((*it).second == lastPlayerScore)
+			playerList.push_back(*it);
 
-	printMessage("Avec un score de " + std::to_string(tmpMaxScore) + " la deuxième place reviens à:");
-	for (it = secondPlayers.begin(); it != secondPlayers.end(); it++)
-		std::cout << (*it).first << std::endl;
-
-	g_sTournamentVars.secondScore = tmpMaxScore;
-}
-
-static void	showThirdPlayers(Tournament* tournament, std::vector< std::pair<std::string, int> >& totalScorePerPlayer) {
-	int	tmpMaxScore = -1;
-
-	std::vector< std::pair<std::string, int> >				thirdPlayers;
-	std::vector< std::pair<std::string, int> >::iterator	it;
-
-	if (tournament->getNumberOfPlayers() < 3)
-		return ;
-
-	for (it = totalScorePerPlayer.begin(); it != totalScorePerPlayer.end(); it++) {
-		if (tmpMaxScore == -1) {
-			if ((*it).second < g_sTournamentVars.secondScore)
-				tmpMaxScore = (*it).second;
-
-			continue ;
-		}
-		if ((*it).second > tmpMaxScore && (*it).second < g_sTournamentVars.secondScore)
-			tmpMaxScore = (*it).second;
+	for (it = playerList.begin(); it != playerList.end(); it++) {
+		totalPlayer--;
+		std::cout << playerPos << ": " << (*it).first << " avec " << (*it).second << " points." << std::endl;
 	}
-	if (tmpMaxScore == -1)
-		return ;
-
-	for (it = totalScorePerPlayer.begin(); it != totalScorePerPlayer.end(); it++)
-		if ((*it).second == tmpMaxScore)
-			thirdPlayers.push_back(*it);
-
-	printMessage("Avec un score de " + std::to_string(tmpMaxScore) + " la troisième place reviens à:");
-	for (it = thirdPlayers.begin(); it != thirdPlayers.end(); it++)
-		std::cout << (*it).first << std::endl;
-
-	g_sTournamentVars.thirdScore = tmpMaxScore;
+	if (totalPlayer > 0)
+		showPositions(totalScorePerPlayer, ++playerPos, lastPlayerScore);
 }
 
 void	showEndHistory(Tournament* tournament) {
 	std::vector< std::pair<std::string, int> >	totalScorePerPlayer;
 
-	printMessage("Voici les statistiques du tournoi:");
 	getTournamentVars(tournament);
 	getTotalScorePerPlayer(tournament, totalScorePerPlayer);
-
-	printMessage("\nVoici la liste des joueurs ainsi que de leurs points:");
-	std::vector< std::pair<std::string, int> >::iterator	it;
-	for (it = totalScorePerPlayer.begin(); it != totalScorePerPlayer.end(); it++)
-		std::cout << (*it).first << " => " << (*it).second << " points." << std::endl;
-
-	std::cout << std::endl;
-	showFirstPlayers(totalScorePerPlayer);
-	std::cout << std::endl;
-	showSecondPlayers(totalScorePerPlayer);
-	std::cout << std::endl;
-	showThirdPlayers(tournament, totalScorePerPlayer);
-	
+	showPositions(totalScorePerPlayer, 1, getMaxScore(totalScorePerPlayer));
 }
