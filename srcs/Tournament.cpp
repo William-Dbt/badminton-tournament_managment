@@ -14,7 +14,8 @@ Tournament::Tournament() {
 	this->_commands["MATCH"] = MATCH;
 	this->_commands["INFOS"] = INFOS;
 	this->_commands["JOUEUR"] = PLAYER;
-	this->_commands["HISTORIQUE"] = HISTORY;
+	// this->_commands["HISTORIQUE"] = HISTORY;
+	this->_commands["STATS"] = STATS;
 	this->_commands["FIN"] = FINISH;
 }
 
@@ -46,7 +47,7 @@ bool	Tournament::startWithHistory() {
 	return false;	
 }
 
-bool	isValidName(std::string name) {
+bool	isValidName(std::string name, bool ignoreMinus) {
 	std::string::iterator	it;
 
 	if (name.empty())
@@ -59,7 +60,7 @@ bool	isValidName(std::string name) {
 		return false;
 
 	for (it = name.begin(); it != name.end(); it++) {
-		if (it == name.begin() && (*it) == '-')
+		if (!ignoreMinus && it == name.begin() && (*it) == '-')
 			continue ;
 
 		if (!isalpha((*it)) && (*it) != '.') {
@@ -79,7 +80,7 @@ void	Tournament::savePlayers() {
 		printMessage("Une fois terminé, tapez \"FIN\".");
 	}
 	while (std::getline(std::cin, buffer)) {
-		if (!isValidName(buffer))
+		if (!isValidName(buffer, false))
 			continue ;
 
 		if (buffer.compare("FIN") == 0)
@@ -396,15 +397,17 @@ unsigned int	Tournament::getNumberOfPlayingMatches() const {
 	return this->_matchsInProgress.size();
 }
 
-unsigned int	Tournament::getNumberOfPlayers() {
+unsigned int	Tournament::getNumberOfPlayers(bool takeStoppedPlayers) {
 	unsigned int	i = 0;
 
 	std::map<const std::string, Player*>::iterator	it;
 
-	for (it = this->_playersList.begin(); it != this->_playersList.end(); it++)
-		if ((*it).second->getStatus() != STOPPED && (*it).second->getStatus() != FINISHED)
-			i++;
+	for (it = this->_playersList.begin(); it != this->_playersList.end(); it++) {
+		if (!takeStoppedPlayers && (*it).second->getStatus() == STOPPED)
+			continue ;
 
+		i++;
+	}
 	return i;
 }
 

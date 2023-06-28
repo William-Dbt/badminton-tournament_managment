@@ -27,21 +27,20 @@ class   Player {
 
 		void			showScoreHistory();
 		unsigned int	getTotalScore(int limitOfMatches = 0);
-		int				getNbOfMatches() const;
+		int				getNbOfMatches(Tournament* tournament = NULL, bool takeStoppedPlayers = true);
 
 		void    setName(const std::string& name);
 		void	setStatus(const int status);
 
-		int															getStatus() const;
-		std::string													getName() const;
-		std::vector< std::pair<std::string, std::pair<int, int> > >	getScoreHistory() const;
+		int																getStatus() const;
+		std::string														getName() const;
+		std::vector< std::pair<std::string, std::pair<int, int> > >&	getScoreHistory();
 
 		bool	operator==(const Player& ref) const;
 
 	private:
 		int						_status;
 		std::string 			_name;
-		int						_nbMatches;
 		std::vector<Player*>	_listPlayersAlreadyPlayed;
 
 		std::vector< std::pair< std::string, std::pair<int, int> > >	_scoreHistory;

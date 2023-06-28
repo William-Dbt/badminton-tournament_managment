@@ -3,7 +3,7 @@
 #include "utils.hpp"
 #include "Player.hpp"
 
-Player::Player(const std::string name) : _status(-1), _name(name), _nbMatches(0) {}
+Player::Player(const std::string name) : _status(-1), _name(name) {}
 
 Player::~Player() {}
 
@@ -70,7 +70,6 @@ void	Player::findMatch(Tournament* tournament) {
 
 void	Player::addScoreMatch(std::string opponent, std::pair<int, int> score) {
 	this->_scoreHistory.push_back(std::make_pair(opponent, score));
-	this->_nbMatches++;
 }
 
 void	Player::showScoreHistory() {
@@ -78,7 +77,7 @@ void	Player::showScoreHistory() {
 	std::vector< std::pair<std::string, std::pair<int, int> > >::iterator	it;
 
 	printMessage("----------------------------------------");
-	if (this->_nbMatches == 0)
+	if (this->getNbOfMatches() == 0)
 		std::cout << "Le joueur " << this->_name << " n'a effectué aucun match." << std::endl;
 	else {
 		printMessage("Historique des matchs de " + this->_name + "\n");
@@ -92,7 +91,7 @@ void	Player::showScoreHistory() {
 			std::cout << "contre " << (*it).first << '.';
 			std::cout << " (" << score.first << " à " << score.second << ")\n" << std::endl;
 		}
-		std::cout << "Nombre de matchs effectué: " << this->_nbMatches << '.' << std::endl;
+		std::cout << "Nombre de matchs effectué: " << this->getNbOfMatches() << '.' << std::endl;
 		std::cout << "Score total accumulé: " << this->getTotalScore() << '.' << std::endl;
 	}
 	printMessage("----------------------------------------");
@@ -105,7 +104,7 @@ unsigned int	Player::getTotalScore(int limitOfMatches) {
 	std::pair<int, int>														score;
 	std::vector< std::pair<std::string, std::pair<int, int> > >::iterator	it;
 
-	if (this->_nbMatches == 0)
+	if (this->getNbOfMatches() == 0)
 		return 0;
 
 	for (it = this->_scoreHistory.begin(); it != this->_scoreHistory.end(); it++) {
@@ -118,8 +117,22 @@ unsigned int	Player::getTotalScore(int limitOfMatches) {
 	return totalScore;
 }
 
-int	Player::getNbOfMatches() const {
-	return this->_nbMatches;
+int	Player::getNbOfMatches(Tournament* tournament, bool takeStoppedPlayers) {
+	int	nbOfMatches = 0;
+
+	if (takeStoppedPlayers)
+		return this->getScoreHistory().size();
+
+	if (!tournament)
+		return 0;
+
+	std::vector< std::pair<std::string, std::pair<int, int> > >::iterator	it;
+
+	for (it = this->getScoreHistory().begin(); it != this->getScoreHistory().end(); it++)
+		if (tournament->findPlayer((*it).first)->getStatus() != STOPPED)
+			nbOfMatches++;
+
+	return nbOfMatches;
 }
 
 void    Player::setName(const std::string& name) {
@@ -138,7 +151,7 @@ std::string	Player::getName() const {
 	return this->_name;
 }
 
-std::vector< std::pair<std::string, std::pair<int, int> > >	Player::getScoreHistory() const {
+std::vector< std::pair<std::string, std::pair<int, int> > >&	Player::getScoreHistory() {
 	return this->_scoreHistory;
 }
 

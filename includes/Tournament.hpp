@@ -1,7 +1,7 @@
 #ifndef __TOURNAMENT_HPP__
 # define __TOURNAMENT_HPP__
 
-# define VERSION 1.2
+# define VERSION 1.4
 
 # include <string>
 # include <map>
@@ -36,7 +36,7 @@ class   Tournament {
 		void	removePlayerFromWaitingQueue(Player* player);
 
 		unsigned int		getNumberOfPlayingMatches() const;
-		unsigned int		getNumberOfPlayers();
+		unsigned int		getNumberOfPlayers(bool takeStoppedPlayers = true);
 		unsigned int		getNumberOfWaitingPlayers() const;
 		std::pair<int, int>	getNumberOfMaxMinPlayedMatches(bool considereStoppedPlayers);
 
@@ -64,6 +64,7 @@ void	MATCH(Tournament* tournament);
 void	INFOS(Tournament* tournament);
 void	PLAYER(Tournament* tournament);
 void	HISTORY(Tournament* tournament);
+void	STATS(Tournament* tournament);
 void	FINISH(Tournament* tournament);
 
 #endif

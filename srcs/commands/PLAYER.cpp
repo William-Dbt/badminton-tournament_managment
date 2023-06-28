@@ -2,8 +2,8 @@
 #include "utils.hpp"
 #include "Tournament.hpp"
 
-bool	isValidName(std::string name);
 void	startMatch(Tournament* tournament);
+bool	isValidName(std::string name, bool ignoreMinus);
 
 static void	addPlayer(Tournament* tournament) {
 	Player*		player;
@@ -27,11 +27,8 @@ static void	addPlayer(Tournament* tournament) {
 		else
 			return (printMessage("Le joueur " + player->getName() + " existe déjà!", WARNING));
 	}
-	if (!player && !isValidName(buffer))
+	if (!player && !isValidName(buffer, true))
 		return ;
-
-	if (buffer[0] == '-')
-		return (printMessage("Le nom du joueur est incorrect! Il ne doit contenir que des lettres et le caractère \'.\'", ERROR));
 
 	if (!player)
 		tournament->addPlayer(buffer);
