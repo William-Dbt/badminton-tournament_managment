@@ -129,7 +129,6 @@ int	Player::getNbOfMatches(Tournament* tournament, bool takeStoppedPlayers) {
 	std::vector< std::pair<std::string, std::pair<int, int> > >::iterator	it;
 
 	for (it = this->getScoreHistory().begin(); it != this->getScoreHistory().end(); it++)
-		if (tournament->findPlayer((*it).first)->getStatus() != STOPPED)
 			nbOfMatches++;
 
 	return nbOfMatches;

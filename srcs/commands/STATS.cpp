@@ -6,6 +6,7 @@
 static void	printName(Player* player) {
 	int	i = 0;
 
+	std::cout << ((player->getStatus() == STOPPED) ? '*' : ' ');
 	if (player->getName().size() > 11)
 		std::cout << player->getName().substr(0, 10) << '.';
 	else
@@ -44,7 +45,7 @@ static void	printMatchesStats(Tournament* tournament, Player* player) {
 }
 
 static void	printStatOfPlayer(Tournament* tournament, Player* player) {
-	std::cout << "| ";
+	std::cout << "|";
 	printName(player);
 
 	std::cout << "| ";
@@ -70,5 +71,5 @@ void	STATS(Tournament* tournament) {
 
 	std::cout << "|_____________|______|________|" << std::endl;
 	if ((tournament->getNumberOfPlayers() - tournament->getNumberOfPlayers(false)) != 0)
-		std::cout << "Rappel: " << (tournament->getNumberOfPlayers() - tournament->getNumberOfPlayers(false)) << " ne sont pas pris en compte dans le tournoi." << std::endl;
+		std::cout << "Les joueurs possédant un \'*\' devant leur nom ne sont plus dans le tournoi." << std::endl;
 }
