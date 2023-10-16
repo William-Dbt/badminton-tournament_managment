@@ -1,4 +1,4 @@
-# 🏸 Personnal Project | Badminton Tournament Management
+# 🏸 C++ Program | Badminton Tournament Management
 
 ## Objectives
 
