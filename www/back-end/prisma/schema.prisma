@@ -10,6 +10,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id Int @id @default(autoincrement())
+enum Rank {
+  OCCASIONAL
+  DEPARTEMENTAL
+  REGIONAL
+  NATIONAL
+  V_WORLD
+  WORLD
+}
+
+enum TournamentType {
+  EVOLUTION
+}
+
+model Player {
+  id   Int    @id @default(autoincrement())
+  name String
+  rank Rank   @default(OCCASIONAL)
+}
+
+model Tournament {
+  id        Int            @id @default(autoincrement())
+  name      String         @unique
+  type      TournamentType
+  createdAt DateTime       @default(now())
 }
