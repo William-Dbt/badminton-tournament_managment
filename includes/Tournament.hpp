@@ -8,6 +8,13 @@
 # include <vector>
 # include "Player.hpp"
 
+typedef std::vector< std::pair< std::pair<Player*, Player*>, std::pair<Player*, Player*> > >	vectorMatchsDouble;
+
+enum	e_mode {
+	ALL_SIMPLE = 0,
+	ALL_DOUBLE
+};
+
 class   Tournament {
 	public:
 		Tournament();
@@ -31,6 +38,8 @@ class   Tournament {
 		std::pair<Player*, Player*>	findMatchByPlayer(Player* player);
 		void						showMatchs(bool showMatchs = true, bool showWaitingList = true);
 
+		void	addDoubleMatch(Player* player1, Player* player2, Player* player3, Player* player4);
+
 		bool	isPlayerInWaitingQueue(Player* player);
 		void	addPlayerToWaitingQueue(Player* player);
 		void	removePlayerFromWaitingQueue(Player* player);
@@ -41,8 +50,11 @@ class   Tournament {
 		std::pair<int, int>	getNumberOfMaxMinPlayedMatches(bool considereStoppedPlayers);
 
 		void	setCourts(unsigned int courts);
+		void	setMode(unsigned int mode);
 
-		unsigned int								getNumberOfCourts() const;
+		unsigned int	getMode() const;
+		unsigned int	getNumberOfCourts() const;
+
 		std::vector< std::pair<Player*, Player*> >&	getMatchsInProgress();
 		std::vector<Player*>&						getWaitingQueue();
 		std::map<const std::string, Player*>&		getPlayersList();
@@ -51,13 +63,16 @@ class   Tournament {
 		struct s_infos {
 			unsigned int	nbCourts;
 		};
-
 		struct s_infos	_infos;
+
+		unsigned int	_mode;
 
 		std::map<const std::string, Player*>			_playersList;
 		std::vector< std::pair<Player*, Player*> >		_matchsInProgress;
 		std::vector<Player*>							_waitingQueue;
 		std::map<std::string, void (*)(Tournament*)>	_commands;
+
+		vectorMatchsDouble	_doubleMatchsInProgress;
 };
 
 void	MATCH(Tournament* tournament);

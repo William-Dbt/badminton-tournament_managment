@@ -91,8 +91,12 @@ void	Tournament::savePlayers() {
 		else
 			this->addPlayer(buffer);
 	}
-	if (this->getNumberOfPlayers() <= 1) {
-		printMessage("Pas assez de joueurs inscrits pour lancer le tournoi.", ERROR);
+	if (this->getNumberOfPlayers() < 2) {
+		printMessage("Pas assez de joueurs inscrits pour lancer le tournoi (2 minimum requis).", ERROR);
+		exit(EXIT_FAILURE);
+	}
+	else if (this->_mode == ALL_DOUBLE &&  this->getNumberOfPlayers() < 4) {
+		printMessage("Pas assez de joueurs inscrits pour lancer le tournoi (4 minimum requis).", ERROR);
 		exit(EXIT_FAILURE);
 	}
 	this->showPlayers();
@@ -315,16 +319,25 @@ std::pair<Player*, Player*>	Tournament::findMatchByPlayer(Player* player) {
 
 void	Tournament::showMatchs(bool showMatchs, bool showWaitingList) {
 	std::vector< std::pair<Player*, Player*> >::iterator	it;
+	vectorMatchsDouble::iterator							itDouble;
 	std::vector<Player*>::iterator							itQueue;
 
 	std::cout << "\n----------------------------------------\n";
 	if (showMatchs) {
-		if (this->_matchsInProgress.size() == 0)
+		if (this->_matchsInProgress.size() == 0 && this->_doubleMatchsInProgress.size() == 0)
 			std::cout << "Aucun match en cours.\n";
 		else {
 			std::cout << "Liste des matchs en cours:\n";
-			for (it = this->_matchsInProgress.begin(); it != this->_matchsInProgress.end(); it++) {
-				std::cout << '\t' << (*it).first->getName() << " contre " << (*it).second->getName() << '\n';
+			if (this->_mode == ALL_SIMPLE) {
+				for (it = this->_matchsInProgress.begin(); it != this->_matchsInProgress.end(); it++)
+					std::cout << '\t' << (*it).first->getName() << " contre " << (*it).second->getName() << '\n';
+			}
+			else {
+				for (itDouble = this->_doubleMatchsInProgress.begin(); itDouble != this->_doubleMatchsInProgress.end(); itDouble++) {
+					std::cout << '\t' << (*itDouble).first.first->getName() << " & " << (*itDouble).first.second->getName();
+					std::cout << " contre ";
+					std::cout << (*itDouble).second.first->getName() << " & " << (*itDouble).second.second->getName() << '\n';
+				}
 			}
 		}
 	}
@@ -341,6 +354,16 @@ void	Tournament::showMatchs(bool showMatchs, bool showWaitingList) {
 		}
 	}
 	std::cout << "----------------------------------------" << std::endl;
+}
+
+void	Tournament::addDoubleMatch(Player* player1, Player* player2, Player* player3, Player* player4) {
+	if (player1 == NULL || player2 == NULL)
+		return ;
+
+	if (player3 == NULL || player4 == NULL)
+		return ;
+
+	this->_doubleMatchsInProgress.push_back(std::make_pair(std::make_pair(player1, player2), std::make_pair(player3, player4)));
 }
 
 bool	Tournament::isPlayerInWaitingQueue(Player* player) {
@@ -393,6 +416,10 @@ void	Tournament::setCourts(unsigned int courts) {
 	this->_infos.nbCourts = courts;
 }
 
+void	Tournament::setMode(unsigned int mode) {
+	this->_mode = mode;
+}
+
 unsigned int	Tournament::getNumberOfPlayingMatches() const {
 	return this->_matchsInProgress.size();
 }
@@ -439,6 +466,10 @@ std::pair<int, int>	Tournament::getNumberOfMaxMinPlayedMatches(bool considereSto
 			nbMaxMatches = player->getNbOfMatches();
 	}
 	return (std::make_pair(nbMinMatches, nbMaxMatches));
+}
+
+unsigned int	Tournament::getMode() const {
+	return this->_mode;
 }
 
 unsigned int	Tournament::getNumberOfCourts() const {

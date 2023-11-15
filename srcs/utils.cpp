@@ -3,13 +3,17 @@
 
 void	printMessage(const std::string message, const int type, const bool newLine) {
 	if (type == WARNING)
-		std::cout << "ATTENTION: ";
+		std::cout << CYELLOW << "ATTENTION: ";
 	else if (type == ERROR)
-		std::cout << "ERREUR: ";
+		std::cout << CRED << "ERREUR: ";
+	else
+		std::cout << CBOLD;
 
 	std::cout << message;
 	if (newLine)
 		std::cout << std::endl;
+
+	std::cout << CRESET;
 }
 
 bool	isStringEmpty(std::string buffer) {

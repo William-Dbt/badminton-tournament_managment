@@ -3,6 +3,13 @@
 
 # include <string>
 
+# define CRESET		"\x1B[0m"
+# define CBOLD		"\x1b[1m"
+# define CGRAY		"\x1B[90m"
+# define CRED		"\x1B[31m"
+# define CYELLOW	"\x1B[33m"
+# define CWHITE		"\x1B[97m"
+
 enum messageType {
 	WARNING,
 	ERROR

@@ -3,11 +3,13 @@
 #include "utils.hpp"
 #include "Player.hpp"
 
-Player::Player(const std::string name) : _status(-1), _name(name) {}
+Player*	g_firstOpponent = NULL;
+
+Player::Player(const std::string name) : _status(-1), _name(name), _partner(NULL) {}
 
 Player::~Player() {}
 
-bool	Player::hasAlreadyPlayAgainst(Player* player) {
+bool	Player::hasAlreadyPlayAgainstOrWith(Player* player) {
 	std::vector<Player*>::iterator	it;
 
 	if (this->_listPlayersAlreadyPlayed.size() == 0)
@@ -24,7 +26,7 @@ void	Player::addToListAlreadyPlayed(Player* player) {
 	if (player == NULL)
 		return ;
 
-	if (this->hasAlreadyPlayAgainst(player))
+	if (this->hasAlreadyPlayAgainstOrWith(player))
 		return ;
 
 	this->_listPlayersAlreadyPlayed.push_back(player);
@@ -48,6 +50,38 @@ void	Player::initMatch(Tournament* tournament, Player* secondPlayer, bool showMe
 	tournament->addMatch(this, secondPlayer);
 }
 
+void	Player::initDoubleMatch(Tournament* tournament) {
+	Player*	fstCouple_first = this;
+	Player*	fstCouple_second = this->getPartner();
+
+	Player*	scndCouple_first = g_firstOpponent;
+	Player*	scndCouple_second = g_firstOpponent->getPartner();
+
+	if (tournament->isPlayerInWaitingQueue(fstCouple_first))
+		tournament->removePlayerFromWaitingQueue(fstCouple_first);
+
+	if (tournament->isPlayerInWaitingQueue(fstCouple_second))
+		tournament->removePlayerFromWaitingQueue(fstCouple_second);
+
+	if (tournament->isPlayerInWaitingQueue(scndCouple_first))
+		tournament->removePlayerFromWaitingQueue(scndCouple_first);
+
+	if (tournament->isPlayerInWaitingQueue(scndCouple_second))
+		tournament->removePlayerFromWaitingQueue(scndCouple_second);
+
+	this->_status = INGAME;
+	fstCouple_second->setStatus(INGAME);
+	scndCouple_first->setStatus(INGAME);
+	scndCouple_second->setStatus(INGAME);
+
+	std::cout << "Premier couple: " << this->_name << " | " << this->getPartner()->getName() << std::endl;
+	std::cout << "Deuxieme couple: " << g_firstOpponent->getName() << " | " << g_firstOpponent->getPartner()->getName() << std::endl;
+	std::cout << ".... Ajout du match à la liste ...." << std::endl;
+
+	tournament->addDoubleMatch(fstCouple_first, fstCouple_second, scndCouple_first, scndCouple_second);
+	g_firstOpponent = NULL;
+}
+
 void	Player::findMatch(Tournament* tournament) {
 	std::vector<Player*>::iterator	it;
 
@@ -58,14 +92,54 @@ void	Player::findMatch(Tournament* tournament) {
 		return ;
 
 	for (it = tournament->getWaitingQueue().begin(); it != tournament->getWaitingQueue().end(); it++) {
+		if (tournament->getMode() == ALL_DOUBLE && tournament->getNumberOfWaitingPlayers() < 4)
+			return ;
+
 		if ((*it) == this)
 			continue ;
 
-		if (this->hasAlreadyPlayAgainst((*it)))
+		if (this->hasAlreadyPlayAgainstOrWith((*it)))
 			continue ;
 
-		return initMatch(tournament, (*it));
+		if (tournament->getMode() == ALL_SIMPLE)
+			return this->initMatch(tournament, (*it));
+		else {
+			if (!this->findDoubleMatch(tournament, (*it)))
+				continue ;
+			else
+				return this->initDoubleMatch(tournament);
+		}
 	}
+}
+
+bool	Player::findDoubleMatch(Tournament* tournament, Player* exceptPlyr) {
+	Player*							player = NULL;
+	std::vector<Player*>::iterator	it;
+
+	for (it = tournament->getWaitingQueue().begin(); it != tournament->getWaitingQueue().end(); it++) {
+		if ((*it) == this)
+			continue ;
+
+		if ((*it) == exceptPlyr)
+			continue ;
+
+		if (player != NULL && (*it) == player)
+			continue ;
+
+		if (player == NULL) {
+			player = (*it);
+			continue ;
+		}
+		if (!player->hasAlreadyPlayAgainstOrWith((*it))) {
+			this->setPartner(exceptPlyr);
+			exceptPlyr->setPartner(this);
+			player->setPartner((*it));
+			(*it)->setPartner(player);
+			g_firstOpponent = player;
+			return true;
+		}
+	}
+	return false;
 }
 
 void	Player::addScoreMatch(std::string opponent, std::pair<int, int> score) {
@@ -142,6 +216,10 @@ void	Player::setStatus(const int status) {
 	this->_status = status;
 }
 
+void	Player::setPartner(Player* player) {
+	this->_partner = player;
+}
+
 int	Player::getStatus() const {
 	return this->_status;
 }
@@ -152,6 +230,10 @@ std::string	Player::getName() const {
 
 std::vector< std::pair<std::string, std::pair<int, int> > >&	Player::getScoreHistory() {
 	return this->_scoreHistory;
+}
+
+Player*	Player::getPartner() {
+	return this->_partner;
 }
 
 bool	Player::operator==(const Player &ref) const {

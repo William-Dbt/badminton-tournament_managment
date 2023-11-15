@@ -18,11 +18,13 @@ class   Player {
 		Player(const std::string name);
 		~Player();
 
-		bool	hasAlreadyPlayAgainst(Player* player);
+		bool	hasAlreadyPlayAgainstOrWith(Player* player);
 		void	addToListAlreadyPlayed(Player* player);
 
 		void	initMatch(Tournament* tournament, Player* player, bool showMessage = true);
+		void	initDoubleMatch(Tournament* tournament);
 		void	findMatch(Tournament* tournament);
+		bool	findDoubleMatch(Tournament* tournament, Player* exceptPlyr);
 		void	addScoreMatch(std::string opponent, std::pair<int, int> score);
 
 		void			showScoreHistory();
@@ -31,10 +33,13 @@ class   Player {
 
 		void    setName(const std::string& name);
 		void	setStatus(const int status);
+		void	setPartner(Player* partner);
 
 		int																getStatus() const;
 		std::string														getName() const;
 		std::vector< std::pair<std::string, std::pair<int, int> > >&	getScoreHistory();
+
+		Player*	getPartner();
 
 		bool	operator==(const Player& ref) const;
 
@@ -43,7 +48,10 @@ class   Player {
 		std::string 			_name;
 		std::vector<Player*>	_listPlayersAlreadyPlayed;
 
+		Player*	_partner;
+
 		std::vector< std::pair< std::string, std::pair<int, int> > >	_scoreHistory;
+
 };
 
 # include "Tournament.hpp"
