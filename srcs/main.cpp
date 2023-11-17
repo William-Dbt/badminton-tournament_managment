@@ -57,7 +57,9 @@ int	main() {
 	tournament.showMatchs();
 	tournament.managment();
 
-	saveHistory(&tournament);
+	if (tournament.getMode() == ALL_SIMPLE)
+		saveHistory(&tournament);
+
 	showEndHistory(&tournament);
 	return 0;
 }

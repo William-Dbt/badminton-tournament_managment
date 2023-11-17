@@ -11,12 +11,14 @@ void	startMatch(Tournament* tournament);
 bool	g_bFinishTournament = false;
 
 Tournament::Tournament() {
+	if (this->_mode == ALL_SIMPLE) {
+		this->_commands["JOUEUR"] = PLAYER;
+		this->_commands["STATS"] = STATS;
+	}
 	this->_commands["MATCH"] = MATCH;
 	this->_commands["INFOS"] = INFOS;
-	this->_commands["JOUEUR"] = PLAYER;
-	// this->_commands["HISTORIQUE"] = HISTORY;
-	this->_commands["STATS"] = STATS;
 	this->_commands["FIN"] = FINISH;
+	// this->_commands["HISTORIQUE"] = HISTORY;
 }
 
 Tournament::~Tournament() {
@@ -307,14 +309,26 @@ std::pair<Player*, Player*>	Tournament::findMatchByPlayer(Player* player) {
 	if (player == NULL)
 		return std::pair<Player*, Player*>(NULL, NULL);
 
-	if (this->findPlayer(player->getName()) == NULL)
-		return std::pair<Player*, Player*>(NULL, NULL);
-
 	for (it = this->_matchsInProgress.begin(); it != this->_matchsInProgress.end(); it++)
 		if ((*it).first->getName() == player->getName() || (*it).second->getName() == player->getName())
 			return (*it);
 
 	return std::pair<Player*, Player*>(NULL, NULL);
+}
+
+playersMatchDouble	Tournament::findDoubleMatchByPlayer(Player* player) {
+	vectorMatchsDouble::iterator	it;
+
+	if (player == NULL)
+		return playersMatchDouble(std::make_pair<Player*, Player*>(NULL, NULL), std::make_pair<Player*, Player*>(NULL,NULL));
+
+	for (it = this->_doubleMatchsInProgress.begin(); it != this->_doubleMatchsInProgress.end(); it++) {
+		if ((*it).first.first->getName() == player->getName() || (*it).first.second->getName() == player->getName())
+			return (*it);
+		else if ((*it).second.first->getName() == player->getName() || (*it).second.second->getName() == player->getName())
+			return (*it);
+	}
+	return playersMatchDouble(std::make_pair<Player*, Player*>(NULL, NULL), std::make_pair<Player*, Player*>(NULL,NULL));
 }
 
 void	Tournament::showMatchs(bool showMatchs, bool showWaitingList) {
@@ -334,9 +348,9 @@ void	Tournament::showMatchs(bool showMatchs, bool showWaitingList) {
 			}
 			else {
 				for (itDouble = this->_doubleMatchsInProgress.begin(); itDouble != this->_doubleMatchsInProgress.end(); itDouble++) {
-					std::cout << '\t' << (*itDouble).first.first->getName() << " & " << (*itDouble).first.second->getName();
-					std::cout << " contre ";
-					std::cout << (*itDouble).second.first->getName() << " & " << (*itDouble).second.second->getName() << '\n';
+					std::cout << '\t' << CYELLOW << (*itDouble).first.first->getName() << " & " << (*itDouble).first.second->getName();
+					std::cout << CRESET << " contre ";
+					std::cout << CYELLOW << (*itDouble).second.first->getName() << " & " << (*itDouble).second.second->getName() << CRESET << '\n';
 				}
 			}
 		}
@@ -421,7 +435,10 @@ void	Tournament::setMode(unsigned int mode) {
 }
 
 unsigned int	Tournament::getNumberOfPlayingMatches() const {
-	return this->_matchsInProgress.size();
+	if (this->_mode == ALL_SIMPLE)
+		return this->_matchsInProgress.size();
+	else
+		return this->_doubleMatchsInProgress.size();
 }
 
 unsigned int	Tournament::getNumberOfPlayers(bool takeStoppedPlayers) {

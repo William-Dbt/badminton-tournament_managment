@@ -8,7 +8,8 @@
 # include <vector>
 # include "Player.hpp"
 
-typedef std::vector< std::pair< std::pair<Player*, Player*>, std::pair<Player*, Player*> > >	vectorMatchsDouble;
+typedef std::pair< std::pair<Player*, Player*>, std::pair<Player*, Player*> >	playersMatchDouble;
+typedef std::vector< playersMatchDouble >										vectorMatchsDouble;
 
 enum	e_mode {
 	ALL_SIMPLE = 0,
@@ -36,6 +37,7 @@ class   Tournament {
 		void						addMatch(Player* player1, Player* player2);
 		void						removeMatch(std::pair<Player*, Player*> match);
 		std::pair<Player*, Player*>	findMatchByPlayer(Player* player);
+		playersMatchDouble			findDoubleMatchByPlayer(Player* player);
 		void						showMatchs(bool showMatchs = true, bool showWaitingList = true);
 
 		void	addDoubleMatch(Player* player1, Player* player2, Player* player3, Player* player4);
