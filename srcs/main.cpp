@@ -42,15 +42,14 @@ int	main() {
 		getHistory(&tournament);
 	else {
 		tournament.savePlayers();
-		// tournament.askCourtsNumber();
-		tournament.setCourts(5);
+		tournament.askCourtsNumber();
 
-		// printMessage("\nLancement du tournoi!");
-		// for (int i = 5; i > 0; i--) {
-		// 	std::cout << i << "...\n";
-		// 	sleep(1);
-		// }
-		// printMessage("Que les matchs commencent!\n");
+		printMessage("\nLancement du tournoi!");
+		for (int i = 5; i > 0; i--) {
+			std::cout << i << "...\n";
+			sleep(1);
+		}
+		printMessage("Que les matchs commencent!\n");
 
 		tournament.initFirstMatchs();
 	}

@@ -196,19 +196,25 @@ unsigned int	Player::getTotalScore(int limitOfMatches) {
 }
 
 int	Player::getNbOfMatches(Tournament* tournament, bool takeStoppedPlayers) {
-	int	nbOfMatches = 0;
+	int		nbOfMatches = 0;
+	Player*	opponent;
+
+	if (tournament->getMode() == ALL_DOUBLE)
+		return this->_doubleScoreHistory.size();
 
 	if (takeStoppedPlayers)
-		return this->getScoreHistory().size();
+		return this->_scoreHistory.size();
 
 	if (!tournament)
 		return 0;
 
 	std::vector< std::pair<std::string, std::pair<int, int> > >::iterator	it;
 
-	for (it = this->getScoreHistory().begin(); it != this->getScoreHistory().end(); it++)
+	for (it = this->_scoreHistory.begin(); it != this->_scoreHistory.end(); it++) {
+		opponent = tournament->findPlayer((*it).first, true);
+		if (opponent != NULL && opponent->getStatus() != STOPPED)
 			nbOfMatches++;
-
+	}
 	return nbOfMatches;
 }
 

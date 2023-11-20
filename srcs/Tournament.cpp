@@ -29,8 +29,13 @@ Tournament::~Tournament() {
 }
 
 bool	Tournament::isCourtsFull() {
-	if (this->_matchsInProgress.size() >= this->_infos.nbCourts)
-		return true;
+	if (this->_mode == ALL_SIMPLE) {
+		if (this->_matchsInProgress.size() >= this->_infos.nbCourts)
+			return true;
+	}
+	else
+		if (this->_doubleMatchsInProgress.size() >= this->_infos.nbCourts)
+			return true;
 
 	return false;
 }
