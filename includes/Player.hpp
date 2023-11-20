@@ -26,6 +26,7 @@ class   Player {
 		void	findMatch(Tournament* tournament);
 		bool	findDoubleMatch(Tournament* tournament, Player* exceptPlyr);
 		void	addScoreMatch(std::string opponent, std::pair<int, int> score);
+		void	addDoubleScoreMatch(Player* opponent1, Player* opponent2, std::pair<int, int> score);
 
 		void			showScoreHistory();
 		unsigned int	getTotalScore(int limitOfMatches = 0);
@@ -50,8 +51,8 @@ class   Player {
 
 		Player*	_partner;
 
-		std::vector< std::pair< std::string, std::pair<int, int> > >	_scoreHistory;
-
+		std::vector< std::pair< std::string, std::pair<int, int> > >					_scoreHistory;
+		std::vector< std::pair< std::pair< Player*, Player*>, std::pair<int, int> > >	_doubleScoreHistory;
 };
 
 # include "Tournament.hpp"

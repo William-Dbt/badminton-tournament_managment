@@ -294,13 +294,23 @@ void	Tournament::addMatch(Player* player1, Player* player2) {
 }
 
 void	Tournament::removeMatch(std::pair<Player*, Player*> match) {
-	std::vector< std::pair<Player*, Player*> >::iterator	it;
+	std::vector< std::pair<Player*, Player*> >::iterator	itSimple;
 
-	for (it = this->_matchsInProgress.begin(); it != this->_matchsInProgress.end(); it++)
-		if ((*it) == match)
+	for (itSimple = this->_matchsInProgress.begin(); itSimple != this->_matchsInProgress.end(); itSimple++)
+		if ((*itSimple) == match)
 			break ;
 
-	this->_matchsInProgress.erase(it);
+	this->_matchsInProgress.erase(itSimple);
+}
+
+void	Tournament::removeDoubleMatch(playersMatchDouble match) {
+	vectorMatchsDouble::iterator	itDouble;
+
+	for (itDouble = this->_doubleMatchsInProgress.begin(); itDouble != this->_doubleMatchsInProgress.end(); itDouble++)
+		if ((*itDouble) == match)
+			break ;
+
+	this->_doubleMatchsInProgress.erase(itDouble);
 }
 
 std::pair<Player*, Player*>	Tournament::findMatchByPlayer(Player* player) {

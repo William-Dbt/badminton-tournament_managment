@@ -146,6 +146,10 @@ void	Player::addScoreMatch(std::string opponent, std::pair<int, int> score) {
 	this->_scoreHistory.push_back(std::make_pair(opponent, score));
 }
 
+void	Player::addDoubleScoreMatch(Player* opponent1, Player* opponent2, std::pair<int, int> score) {
+	this->_doubleScoreHistory.push_back(std::make_pair(std::make_pair(opponent1, opponent2), score));
+}
+
 void	Player::showScoreHistory() {
 	std::pair<int, int>														score;
 	std::vector< std::pair<std::string, std::pair<int, int> > >::iterator	it;
