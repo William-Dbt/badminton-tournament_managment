@@ -8,7 +8,6 @@
 # define CGRAY		"\x1B[90m"
 # define CRED		"\x1B[31m"
 # define CYELLOW	"\x1B[33m"
-# define CWHITE		"\x1B[97m"
 
 enum messageType {
 	WARNING,

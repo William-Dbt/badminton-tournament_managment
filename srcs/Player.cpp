@@ -57,6 +57,8 @@ void	Player::initDoubleMatch(Tournament* tournament) {
 	Player*	scndCouple_first = g_firstOpponent;
 	Player*	scndCouple_second = g_firstOpponent->getPartner();
 
+	std::string	buffer;
+
 	if (tournament->isPlayerInWaitingQueue(fstCouple_first))
 		tournament->removePlayerFromWaitingQueue(fstCouple_first);
 
@@ -73,10 +75,10 @@ void	Player::initDoubleMatch(Tournament* tournament) {
 	fstCouple_second->setStatus(INGAME);
 	scndCouple_first->setStatus(INGAME);
 	scndCouple_second->setStatus(INGAME);
-
-	std::cout << "Premier couple: " << this->_name << " | " << this->getPartner()->getName() << std::endl;
-	std::cout << "Deuxieme couple: " << g_firstOpponent->getName() << " | " << g_firstOpponent->getPartner()->getName() << std::endl;
-	std::cout << ".... Ajout du match à la liste ...." << std::endl;
+	std::cout <<  CBOLD << "Match trouvé entre ";
+	std::cout <<  CYELLOW << this->_name << " et " << fstCouple_second->getName();
+	std::cout <<  CRESET << CBOLD << " contre " << CYELLOW << scndCouple_first->getName() << " et " << scndCouple_second->getName();
+	std::cout <<  CRESET;
 
 	tournament->addDoubleMatch(fstCouple_first, fstCouple_second, scndCouple_first, scndCouple_second);
 	g_firstOpponent = NULL;
