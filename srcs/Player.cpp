@@ -45,7 +45,7 @@ void	Player::initMatch(Tournament* tournament, Player* secondPlayer, bool showMe
 	this->_status = INGAME;
 	secondPlayer->setStatus(INGAME);
 	if (showMessage)
-		printMessage("Match trouvé entre " + this->_name + " et " + secondPlayer->getName() + "!");
+		printMessage("Match trouvé entre " + this->_name + " et " + secondPlayer->getName() + ".");
 
 	tournament->addMatch(this, secondPlayer);
 }
@@ -177,22 +177,33 @@ void	Player::showScoreHistory() {
 	printMessage("----------------------------------------");
 }
 
-unsigned int	Player::getTotalScore(int limitOfMatches) {
+unsigned int	Player::getTotalScore(int limitOfMatches, Tournament* tournament) {
 	int				i = 0;
 	unsigned int	totalScore = 0;
 
-	std::pair<int, int>														score;
-	std::vector< std::pair<std::string, std::pair<int, int> > >::iterator	it;
+	std::pair<int, int>	score;
 
-	if (this->getNbOfMatches() == 0)
+	if (this->getNbOfMatches(tournament) == 0)
 		return 0;
 
-	for (it = this->_scoreHistory.begin(); it != this->_scoreHistory.end(); it++) {
-		if (limitOfMatches && i++ == limitOfMatches)
-			break ;
+	if (tournament && tournament->getMode() == ALL_SIMPLE) {
+		std::vector< std::pair<std::string, std::pair<int, int> > >::iterator	it;
 
-		score = (*it).second;
-		totalScore += score.first;
+		for (it = this->_scoreHistory.begin(); it != this->_scoreHistory.end(); it++) {
+			if (limitOfMatches && i++ == limitOfMatches)
+				break ;
+
+			score = (*it).second;
+			totalScore += score.first;
+		}
+	}
+	else {
+		std::vector< std::pair< std::pair< Player*, Player*>, std::pair<int, int> > >::iterator	doubleIt;
+
+		for (doubleIt = this->_doubleScoreHistory.begin(); doubleIt != this->_doubleScoreHistory.end(); doubleIt++) {
+			score = (*doubleIt).second;
+			totalScore += score.first;
+		}
 	}
 	return totalScore;
 }
@@ -201,7 +212,7 @@ int	Player::getNbOfMatches(Tournament* tournament, bool takeStoppedPlayers) {
 	int		nbOfMatches = 0;
 	Player*	opponent;
 
-	if (tournament->getMode() == ALL_DOUBLE)
+	if (tournament && tournament->getMode() == ALL_DOUBLE)
 		return this->_doubleScoreHistory.size();
 
 	if (takeStoppedPlayers)

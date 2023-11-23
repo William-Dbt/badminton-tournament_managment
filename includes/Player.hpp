@@ -29,7 +29,7 @@ class   Player {
 		void	addDoubleScoreMatch(Player* opponent1, Player* opponent2, std::pair<int, int> score);
 
 		void			showScoreHistory();
-		unsigned int	getTotalScore(int limitOfMatches = 0);
+		unsigned int	getTotalScore(int limitOfMatches = 0, Tournament* tournament = NULL);
 		int				getNbOfMatches(Tournament* tournament = NULL, bool takeStoppedPlayers = true);
 
 		void    setName(const std::string& name);

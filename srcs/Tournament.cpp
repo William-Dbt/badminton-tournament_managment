@@ -19,6 +19,8 @@ Tournament::Tournament() {
 	this->_commands["INFOS"] = INFOS;
 	this->_commands["FIN"] = FINISH;
 	// this->_commands["HISTORIQUE"] = HISTORY;
+
+	this->_infos.nbCourts = 0;
 }
 
 Tournament::~Tournament() {

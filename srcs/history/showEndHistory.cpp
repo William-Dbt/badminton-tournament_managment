@@ -61,7 +61,7 @@ static void	getTotalScorePerPlayer(Tournament* tournament, std::vector< std::pai
 		if (!g_sTournamentVars.isStoppedPlayerConsidered && (*it).second->getStatus() == STOPPED)
 			continue ;
 
-		totalScorePerPlayer.push_back(std::make_pair((*it).first, (*it).second->getTotalScore(g_sTournamentVars.nbMatchsConsidered)));
+		totalScorePerPlayer.push_back(std::make_pair((*it).first, (*it).second->getTotalScore(g_sTournamentVars.nbMatchsConsidered, tournament)));
 	}
 }
 
@@ -158,7 +158,12 @@ static void	showPositions(std::vector< std::pair<std::string, int> >& totalScore
 void	showEndHistory(Tournament* tournament) {
 	std::vector< std::pair<std::string, int> >	totalScorePerPlayer;
 
-	getTournamentVars(tournament);
+	if (tournament->getMode() == ALL_SIMPLE)
+		getTournamentVars(tournament);
+	else {
+		g_sTournamentVars.isStoppedPlayerConsidered = true;
+		g_sTournamentVars.nbMatchsConsidered = -1;
+	}
 	getTotalScorePerPlayer(tournament, totalScorePerPlayer);
 	std::cout << std::endl;
 	showPositions(totalScorePerPlayer, 1, getMaxScore(totalScorePerPlayer));
