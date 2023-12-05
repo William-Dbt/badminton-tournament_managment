@@ -231,6 +231,25 @@ int	Player::getNbOfMatches(Tournament* tournament, bool takeStoppedPlayers) {
 	return nbOfMatches;
 }
 
+int	Player::getNbOfMatchesWon(Tournament* tournament) {
+	int	totalMatchsWon = 0;
+
+	std::vector< std::pair< std::string, std::pair<int, int> > >::iterator					it;
+	std::vector< std::pair< std::pair< Player*, Player*>, std::pair<int, int> > >::iterator	doubleIt;
+
+	if (tournament->getMode() == ALL_DOUBLE) {
+		for (doubleIt = this->_doubleScoreHistory.begin(); doubleIt != this->_doubleScoreHistory.end(); doubleIt++)
+			if ((*doubleIt).second.first > (*doubleIt).second.second)
+				totalMatchsWon++;
+	}
+	else {
+		for (it = this->_scoreHistory.begin(); it != this->_scoreHistory.end(); it++)
+			if ((*it).second.first > (*it).second.second)
+				totalMatchsWon++;
+	}
+	return totalMatchsWon;
+}
+
 void    Player::setName(const std::string& name) {
     this->_name = name;
 }
@@ -253,6 +272,10 @@ std::string	Player::getName() const {
 
 std::vector< std::pair<std::string, std::pair<int, int> > >&	Player::getScoreHistory() {
 	return this->_scoreHistory;
+}
+
+std::vector< std::pair< std::pair< Player*, Player*>, std::pair<int, int> > >&	Player::getDoubleScoreHistory() {
+	return this->_doubleScoreHistory;
 }
 
 Player*	Player::getPartner() {

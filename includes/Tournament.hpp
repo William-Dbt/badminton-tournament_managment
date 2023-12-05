@@ -31,6 +31,7 @@ class   Tournament {
 
 		void	addPlayer(const std::string name);
 		void	removePlayer(const std::string name, const bool isTournamentStarted = true);
+		void	removePlayerFromDouble(Player* player, const bool isTournamentStarted);
 		Player*	findPlayer(const std::string name, const bool evenIfNotParticipate = false);
 		void	showPlayers(const bool printNumberOfPlayers = true, const bool printNotParticipatingPlayers = false);
 

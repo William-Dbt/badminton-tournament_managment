@@ -31,14 +31,16 @@ class   Player {
 		void			showScoreHistory();
 		unsigned int	getTotalScore(int limitOfMatches = 0, Tournament* tournament = NULL);
 		int				getNbOfMatches(Tournament* tournament = NULL, bool takeStoppedPlayers = true);
+		int				getNbOfMatchesWon(Tournament* tournament);
 
 		void    setName(const std::string& name);
 		void	setStatus(const int status);
 		void	setPartner(Player* partner);
 
-		int																getStatus() const;
-		std::string														getName() const;
-		std::vector< std::pair<std::string, std::pair<int, int> > >&	getScoreHistory();
+		int																				getStatus() const;
+		std::string																		getName() const;
+		std::vector< std::pair<std::string, std::pair<int, int> > >&					getScoreHistory();
+		std::vector< std::pair< std::pair< Player*, Player*>, std::pair<int, int> > >&	getDoubleScoreHistory();
 
 		Player*	getPartner();
 

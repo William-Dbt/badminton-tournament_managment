@@ -81,7 +81,7 @@ static int	getMaxScore(std::vector< std::pair<std::string, int> >& totalScorePer
 	return score;
 }
 
-static void	printPosition(int position, std::vector< std::pair<std::string, int> > playerList) {
+static void	printPosition(Tournament* tournament, int position, std::vector< std::pair<std::string, int> > playerList) {
 	std::vector< std::pair<std::string, int> >::iterator	it;
 
 	static std::vector< std::pair<std::string, int> >	savedFirstPlayerList;
@@ -94,17 +94,21 @@ static void	printPosition(int position, std::vector< std::pair<std::string, int>
 		std::cout << "‾‾‾‾‾‾‾|\n";
 		for (it = playerList.begin(); it != playerList.end(); it++) {
 			if (it == playerList.begin())
-				std::cout << "  2nd  | " << (*it).first << " (" << (*it).second << ")\n";
+				std::cout << "  2nd  | " << (*it).first << " (" << (*it).second << " pts)";
 			else
-				std::cout << "       | " << (*it).first << '\n';
+				std::cout << "       | " << (*it).first;
+
+			std::cout << " | " << tournament->findPlayer((*it).first)->getNbOfMatchesWon(tournament) << " matchs gagnés.\n";
 		}
 		std::cout << "       |\n";
 		std::cout << "‾‾‾‾‾‾‾‾‾‾|\n";
 		for (it = savedFirstPlayerList.begin(); it != savedFirstPlayerList.end(); it++) {
 			if (it == savedFirstPlayerList.begin())
-				std::cout << "    1st   | " << (*it).first << " (" << (*it).second << ")\n";
+				std::cout << "    1st   | " << (*it).first << " (" << (*it).second << " pts)";
 			else
-				std::cout << "          | " << (*it).first << '\n';
+				std::cout << "          | " << (*it).first;
+
+			std::cout << " | " << tournament->findPlayer((*it).first)->getNbOfMatchesWon(tournament) << " matchs gagnés.\n";
 		}
 		std::cout << "          |\n";
 	}
@@ -112,9 +116,11 @@ static void	printPosition(int position, std::vector< std::pair<std::string, int>
 		std::cout << "‾‾‾‾‾|‾‾‾‾\n";
 		for (it = playerList.begin(); it != playerList.end(); it++) {
 			if (it == playerList.begin())
-				std::cout << " 3rd | " << (*it).first << " (" << (*it).second << ")\n";
+				std::cout << " 3rd | " << (*it).first << " (" << (*it).second << " pts)";
 			else
-				std::cout << "     | " << (*it).first << '\n';
+				std::cout << "     | " << (*it).first;
+
+			std::cout << " | " << tournament->findPlayer((*it).first)->getNbOfMatchesWon(tournament) << " matchs gagnés.\n";
 		}
 		std::cout << "     |\n";
 		std::cout << "‾‾‾‾‾" << std::endl;
@@ -122,14 +128,16 @@ static void	printPosition(int position, std::vector< std::pair<std::string, int>
 	else {
 		for (it = playerList.begin(); it != playerList.end(); it++) {
 			if (it == playerList.begin())
-				std::cout << '(' << position << ") " << (*it).first << " | " << (*it).second << "pts" << std::endl;
+				std::cout << '(' << position << ") " << (*it).first << " | " << (*it).second << "pts";
 			else
-				std::cout << ((position > 10) ? "(**) " : "(*) ") << (*it).first << std::endl;
+				std::cout << ((position > 10) ? "(**) " : "(*) ") << (*it).first;
+
+			std::cout << " | " << tournament->findPlayer((*it).first)->getNbOfMatchesWon(tournament) << " matchs gagnés." << std::endl;
 		}
 	}
 }
 
-static void	showPositions(std::vector< std::pair<std::string, int> >& totalScorePerPlayer, int playerPos, int lastPlayerScore) {
+static void	showPositions(Tournament* tournament, std::vector< std::pair<std::string, int> >& totalScorePerPlayer, int playerPos, int lastPlayerScore) {
 	int			currentScore;
 	int			lastScore = -1;
 	static int	totalPlayer = totalScorePerPlayer.size();
@@ -149,10 +157,10 @@ static void	showPositions(std::vector< std::pair<std::string, int> >& totalScore
 		if ((*it).second == lastPlayerScore)
 			playerList.push_back(*it);
 
-	printPosition(playerPos, playerList);
+	printPosition(tournament, playerPos, playerList);
 	totalPlayer -= playerList.size();
 	if (totalPlayer > 0)
-		showPositions(totalScorePerPlayer, ++playerPos, lastPlayerScore);
+		showPositions(tournament, totalScorePerPlayer, ++playerPos, lastPlayerScore);
 }
 
 void	showEndHistory(Tournament* tournament) {
@@ -166,5 +174,5 @@ void	showEndHistory(Tournament* tournament) {
 	}
 	getTotalScorePerPlayer(tournament, totalScorePerPlayer);
 	std::cout << std::endl;
-	showPositions(totalScorePerPlayer, 1, getMaxScore(totalScorePerPlayer));
+	showPositions(tournament, totalScorePerPlayer, 1, getMaxScore(totalScorePerPlayer));
 }

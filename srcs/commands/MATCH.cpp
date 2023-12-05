@@ -9,7 +9,7 @@ void	startMatch(Tournament* tournament) {
 
 	if ((tournament->getMode() == ALL_SIMPLE && nbWaitingPlayers < 2)
 		|| (tournament->getMode() == ALL_DOUBLE && nbWaitingPlayers < 4))
-		return (printMessage("Il n'y a pas assez de joueur en file d'attente pour lancer un match!", ERROR));
+		return (printMessage("Il n'y a pas assez de joueur en file d'attente pour lancer un match!", WARNING));
 
 	if (tournament->isCourtsFull())
 		return (printMessage("Tous les terrains sont occupés pour le moment.", ERROR));

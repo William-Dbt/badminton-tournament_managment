@@ -12,9 +12,9 @@ bool	g_bFinishTournament = false;
 
 Tournament::Tournament() {
 	if (this->_mode == ALL_SIMPLE) {
-		this->_commands["JOUEUR"] = PLAYER;
 		this->_commands["STATS"] = STATS;
 	}
+	this->_commands["JOUEUR"] = PLAYER;
 	this->_commands["MATCH"] = MATCH;
 	this->_commands["INFOS"] = INFOS;
 	this->_commands["FIN"] = FINISH;
@@ -204,6 +204,51 @@ void	Tournament::addPlayer(const std::string name) {
 	this->addPlayerToWaitingQueue(player);
 }
 
+void	Tournament::removePlayerFromDouble(Player* player, const bool isTournamentStarted) {
+	bool				isMatchStopped = false;
+	playersMatchDouble	match = this->findDoubleMatchByPlayer(player);
+
+	if (match.first.first != NULL) {
+		std::cout << CBOLD << "Suppression du match entre " << CYELLOW << match.first.first->getName() << CRESET << CBOLD << "et" << CYELLOW << match.first.second->getName();
+		std::cout << CRESET << CBOLD << " contre ";
+		std::cout << CYELLOW << CYELLOW << match.second.first->getName() << CRESET << CBOLD << "et" << CYELLOW << match.second.second->getName();
+		std::cout << CRESET << CBOLD << '.';
+		this->removeDoubleMatch(match);
+		if (player != match.first.first)
+			this->addPlayerToWaitingQueue(match.first.first);
+		
+		if (player != match.first.second)
+			this->addPlayerToWaitingQueue(match.first.second);
+
+		if (player != match.second.first)
+			this->addPlayerToWaitingQueue(match.second.first);
+
+		if (player != match.second.second)
+			this->addPlayerToWaitingQueue(match.second.second);
+
+		isMatchStopped = true;
+	}
+	if (this->isPlayerInWaitingQueue(player))
+		this->removePlayerFromWaitingQueue(player);
+
+	const std::string	playerName = player->getName();
+
+	player->setStatus(STOPPED);
+	if (!isTournamentStarted || player->getDoubleScoreHistory().empty()) {
+		delete this->_playersList[playerName];
+		this->_playersList.erase(playerName);
+	}
+	printMessage("Le joueur " + playerName + " a été enlevé du tournoi!");
+	if (this->getNumberOfPlayers() <= 1) {
+		g_bFinishTournament = true;
+		return printMessage("\nIl n'y a plus assez de joueur en liste pour continuer le tournoi!");
+	}
+	if (isMatchStopped) {
+		printMessage("\nUn match en cours a été stoppé, esseyons d'en lancer un autre!");
+		startMatch(this);
+	}
+}
+
 void	Tournament::removePlayer(const std::string name, const bool isTournamentStarted) {
 	bool		isMatchStopped = false;
 	std::string	buffer;
@@ -227,6 +272,9 @@ void	Tournament::removePlayer(const std::string name, const bool isTournamentSta
 		if (!isOui(buffer))
 			return ;
 	}
+	if (this->_mode == ALL_DOUBLE)
+		return this->removePlayerFromDouble(player, isTournamentStarted);
+
 	match = this->findMatchByPlayer(player);
 	if (match.first != NULL) {
 		printMessage("Suppression du match entre " + match.first->getName() + " et " + match.second->getName() + ".");
