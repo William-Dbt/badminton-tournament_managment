@@ -10,7 +10,7 @@ enum	e_status {
 	WAITING = 0,
 	INGAME,
 	STOPPED,
-	FINISHED	//TODO
+	FINISHED
 };
 
 class   Player {

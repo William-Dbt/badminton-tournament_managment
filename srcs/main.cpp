@@ -8,10 +8,10 @@ void	getHistory(Tournament* tournament);
 void	showEndHistory(Tournament* tournament);
 
 static void	mainMessage() {
-	std::cout << "########################################\n";
+	std::cout << CBOLD << "########################################\n";
 	std::cout << "USJM Badminton: Programme pour tournois\n";
-	std::cout << "Version: " << VERSION << '\n';
-	std::cout << "########################################\n" << std::endl;
+	std::cout << "Version: " << CYELLOW << VERSION << '\n';
+	std::cout << CRESET << CBOLD << "########################################\n" << CRESET << std::endl;
 }
 
 int	main() {

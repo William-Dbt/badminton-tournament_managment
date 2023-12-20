@@ -5,6 +5,7 @@
 
 # define CRESET		"\x1B[0m"
 # define CBOLD		"\x1b[1m"
+# define CRESETB	CRESET << CBOLD
 # define CGRAY		"\x1B[90m"
 # define CRED		"\x1B[31m"
 # define CYELLOW	"\x1B[33m"

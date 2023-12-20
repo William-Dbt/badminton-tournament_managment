@@ -216,7 +216,7 @@ void	Tournament::removePlayerFromDouble(Player* player, const bool isTournamentS
 		this->removeDoubleMatch(match);
 		if (player != match.first.first)
 			this->addPlayerToWaitingQueue(match.first.first);
-		
+
 		if (player != match.first.second)
 			this->addPlayerToWaitingQueue(match.first.second);
 
@@ -267,7 +267,7 @@ void	Tournament::removePlayer(const std::string name, const bool isTournamentSta
 
 	if (isTournamentStarted) {
 		printMessage("Êtes-vous sûr de vouloir supprimer le joueur " + name + "? (O:oui/N:non)");
-		printMessage("Si le joueur est dans un match, ce dernier ne sera pas pris en compte pour les deux joueurs.");
+		printMessage("Si le joueur est dans un match, ce dernier ne sera pas pris en compte pour les deux joueurs.", WARNING);
 		std::getline(std::cin, buffer);
 		if (!isOui(buffer))
 			return ;
@@ -277,7 +277,8 @@ void	Tournament::removePlayer(const std::string name, const bool isTournamentSta
 
 	match = this->findMatchByPlayer(player);
 	if (match.first != NULL) {
-		printMessage("Suppression du match entre " + match.first->getName() + " et " + match.second->getName() + ".");
+		std::cout << CBOLD << "\nSuppression du match entre " << CYELLOW << match.first->getName() << CRESETB << " et ";
+		std::cout << CYELLOW << match.second->getName() << CRESETB << '.' << std::endl;
 		this->removeMatch(match);
 		if (player != match.first)
 			this->addPlayerToWaitingQueue(match.first);
@@ -294,10 +295,10 @@ void	Tournament::removePlayer(const std::string name, const bool isTournamentSta
 		delete this->_playersList[name];
 		this->_playersList.erase(name);
 	}
-	printMessage("Le joueur " + name + " a été enlevé du tournoi!");
+	std::cout << CBOLD << "Le joueur " << CYELLOW << name << CRESETB << " a été enlevé du tournoi!" << std::endl;
 	if (this->getNumberOfPlayers() <= 1) {
 		g_bFinishTournament = true;
-		return printMessage("\nIl n'y a plus assez de joueur en liste pour continuer le tournoi!");
+		return printMessage("\nIl n'y a plus assez de joueur en liste pour continuer le tournoi!", WARNING);
 	}
 	if (isMatchStopped) {
 		printMessage("\nUn match en cours a été stoppé, esseyons d'en lancer un autre!");
@@ -401,7 +402,7 @@ void	Tournament::showMatchs(bool showMatchs, bool showWaitingList) {
 	vectorMatchsDouble::iterator							itDouble;
 	std::vector<Player*>::iterator							itQueue;
 
-	std::cout << "\n----------------------------------------\n";
+	std::cout << '\n' << CBOLD << "----------------------------------------" << CRESET << '\n';
 	if (showMatchs) {
 		if (this->_matchsInProgress.size() == 0 && this->_doubleMatchsInProgress.size() == 0)
 			std::cout << "Aucun match en cours.\n";
@@ -409,13 +410,13 @@ void	Tournament::showMatchs(bool showMatchs, bool showWaitingList) {
 			std::cout << "Liste des matchs en cours:\n";
 			if (this->_mode == ALL_SIMPLE) {
 				for (it = this->_matchsInProgress.begin(); it != this->_matchsInProgress.end(); it++)
-					std::cout << '\t' << (*it).first->getName() << " contre " << (*it).second->getName() << '\n';
+					std::cout << '\t' << CBOLD << CYELLOW << (*it).first->getName() << CRESET << " contre " << CBOLD << CYELLOW << (*it).second->getName() << CRESET << '\n';
 			}
 			else {
 				for (itDouble = this->_doubleMatchsInProgress.begin(); itDouble != this->_doubleMatchsInProgress.end(); itDouble++) {
-					std::cout << '\t' << CYELLOW << (*itDouble).first.first->getName() << " & " << (*itDouble).first.second->getName();
+					std::cout << '\t' << CBOLD << CYELLOW << (*itDouble).first.first->getName() << " & " << (*itDouble).first.second->getName();
 					std::cout << CRESET << " contre ";
-					std::cout << CYELLOW << (*itDouble).second.first->getName() << " & " << (*itDouble).second.second->getName() << CRESET << '\n';
+					std::cout << CBOLD << CYELLOW << (*itDouble).second.first->getName() << " & " << (*itDouble).second.second->getName() << CRESET << '\n';
 				}
 			}
 		}
@@ -429,10 +430,10 @@ void	Tournament::showMatchs(bool showMatchs, bool showWaitingList) {
 		else {
 			std::cout << "Liste des joueurs en attente:\n";
 			for (itQueue = this->_waitingQueue.begin(); itQueue != this->_waitingQueue.end(); itQueue++)
-				std::cout << "\t- " << (*itQueue)->getName() << '\n';
+				std::cout << "\t- " << CBOLD << CYELLOW << (*itQueue)->getName() << CRESET << '\n';
 		}
 	}
-	std::cout << "----------------------------------------" << std::endl;
+	std::cout << CBOLD << "----------------------------------------" << CRESET << std::endl;
 }
 
 void	Tournament::addDoubleMatch(Player* player1, Player* player2, Player* player3, Player* player4) {

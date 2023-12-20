@@ -2,11 +2,18 @@
 #include "utils.hpp"
 #include "Tournament.hpp"
 
+extern bool g_bFinishTournament;
+
 void	startMatch(Tournament* tournament) {
 	unsigned int					nbWaitingPlayers = tournament->getNumberOfWaitingPlayers();
 	std::vector<Player*>&			waitingQueue = tournament->getWaitingQueue();
 	std::vector<Player*>::iterator	it;
 
+	if (tournament->getNumberOfPlayingMatches() == 0 && tournament->getNumberOfWaitingPlayers() == 0) {
+		printMessage("Plus aucun joueur est en attente de match, arrêt du tournoi!", WARNING);
+		g_bFinishTournament = true;
+		return ;
+	}
 	if ((tournament->getMode() == ALL_SIMPLE && nbWaitingPlayers < 2)
 		|| (tournament->getMode() == ALL_DOUBLE && nbWaitingPlayers < 4))
 		return (printMessage("Il n'y a pas assez de joueur en file d'attente pour lancer un match!", WARNING));
@@ -75,10 +82,22 @@ static void	finishSimpleMatch(Tournament* tournament, std::string playerName) {
 	match.second->addScoreMatch(match.first->getName(), std::pair<int, int>(score.second, score.first));
 	match.first->addToListAlreadyPlayed(match.second);
 	match.second->addToListAlreadyPlayed(match.first);
-	tournament->addPlayerToWaitingQueue(match.first);
-	tournament->addPlayerToWaitingQueue(match.second);
+	if (match.first->getNbOfMatches(tournament) == (int)(tournament->getNumberOfPlayers() - 1)) {
+		std::cout << CBOLD << "\nLe joueur " << CYELLOW << match.first->getName() << CRESETB << " a fini tous ses matchs!" << std::endl;
+		match.first->setStatus(FINISHED);
+	}
+	else
+		tournament->addPlayerToWaitingQueue(match.first);
+
+	if (match.second->getNbOfMatches(tournament) == (int)(tournament->getNumberOfPlayers() - 1)) {
+		std::cout << CBOLD << "Le joueur " << CYELLOW << match.second->getName() << CRESETB << " a fini tous ses matchs!" << std::endl;
+		match.second->setStatus(FINISHED);
+	}
+	else
+		tournament->addPlayerToWaitingQueue(match.second);
+
 	tournament->removeMatch(match);
-	printMessage("Les deux joueurs ont été ajoutés dans la file d'attente, le score est enregistré.\n");
+	printMessage("Les deux joueurs ont été ajouté dans la file d'attente (si ils n'ont pas fini tous leurs matchs), le score est enregistré.\n");
 	printMessage("Lancement d'un nouveau match!");
 	startMatch(tournament);
 }

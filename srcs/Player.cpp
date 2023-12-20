@@ -44,9 +44,10 @@ void	Player::initMatch(Tournament* tournament, Player* secondPlayer, bool showMe
 
 	this->_status = INGAME;
 	secondPlayer->setStatus(INGAME);
-	if (showMessage)
-		printMessage("Match trouvé entre " + this->_name + " et " + secondPlayer->getName() + ".");
-
+	if (showMessage) {
+		std::cout << CBOLD << "Match trouvé entre " << CYELLOW << this->_name << CRESETB << " et ";
+		std::cout << CYELLOW << secondPlayer->getName() << CRESETB << '.' << std::endl;
+	}
 	tournament->addMatch(this, secondPlayer);
 }
 
@@ -77,8 +78,8 @@ void	Player::initDoubleMatch(Tournament* tournament) {
 	scndCouple_second->setStatus(INGAME);
 	std::cout << CBOLD << "Match trouvé entre ";
 	std::cout << CYELLOW << this->_name << " et " << fstCouple_second->getName();
-	std::cout << CRESET << CBOLD << " contre " << CYELLOW << scndCouple_first->getName() << " et " << scndCouple_second->getName();
-	std::cout << CRESET << CBOLD << ".\n" << CRESET;
+	std::cout << CRESETB << " contre " << CYELLOW << scndCouple_first->getName() << " et " << scndCouple_second->getName();
+	std::cout << CRESETB << ".\n" << CRESET;
 
 	tournament->addDoubleMatch(fstCouple_first, fstCouple_second, scndCouple_first, scndCouple_second);
 	g_firstOpponent = NULL;

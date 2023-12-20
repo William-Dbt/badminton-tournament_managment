@@ -1,7 +1,7 @@
 #ifndef __TOURNAMENT_HPP__
 # define __TOURNAMENT_HPP__
 
-# define VERSION 1.4
+# define VERSION 1.6
 
 # include <string>
 # include <map>

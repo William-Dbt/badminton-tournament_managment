@@ -49,8 +49,8 @@ static void	getTournamentVars(Tournament* tournament) {
 		break ;
 	}
 	nbOfMatches = tournament->getNumberOfMaxMinPlayedMatches(g_sTournamentVars.isStoppedPlayerConsidered);
-	printMessage("\nVoici le nombre minimum de match effectué par un (ou plusieurs) joueurs: " + std::to_string(nbOfMatches.first) + ".");
-	printMessage("Et le nombre maximum: " + std::to_string(nbOfMatches.second) + ".\n");
+	std::cout << CBOLD << "\nVoici le nombre minimum de match effectué par un (ou plusieurs) joueurs: " << CYELLOW << std::to_string(nbOfMatches.first) << CRESETB << ".\n";
+	std::cout << CBOLD << "Et le nombre maximum: " << CYELLOW << std::to_string(nbOfMatches.second) << CRESETB << '.' << CRESET << std::endl;
 	getNbOfMatchesConsidered(nbOfMatches);
 }
 
@@ -91,24 +91,24 @@ static void	printPosition(Tournament* tournament, int position, std::vector< std
 		return ;
 	}
 	else if (position == 2) {
-		std::cout << "‾‾‾‾‾‾‾|\n";
+		std::cout << CBOLD << "‾‾‾‾‾‾‾|" << '\n';
 		for (it = playerList.begin(); it != playerList.end(); it++) {
 			if (it == playerList.begin())
-				std::cout << "  2nd  | " << (*it).first << " (" << (*it).second << " pts)";
+				std::cout << CYELLOW << "  2nd" << CRESETB << "  | " << (*it).first << " (" << CYELLOW << (*it).second << CRESETB << " pts)";
 			else
 				std::cout << "       | " << (*it).first;
 
-			std::cout << " | " << tournament->findPlayer((*it).first)->getNbOfMatchesWon(tournament) << " matchs gagnés.\n";
+			std::cout << " | " << CYELLOW << tournament->findPlayer((*it).first, true)->getNbOfMatchesWon(tournament) << CRESETB << " match(s) gagnés.\n";
 		}
 		std::cout << "       |\n";
 		std::cout << "‾‾‾‾‾‾‾‾‾‾|\n";
 		for (it = savedFirstPlayerList.begin(); it != savedFirstPlayerList.end(); it++) {
 			if (it == savedFirstPlayerList.begin())
-				std::cout << "    1st   | " << (*it).first << " (" << (*it).second << " pts)";
+				std::cout << CYELLOW << "    1st" << CRESETB << "   | " << (*it).first << " (" << CYELLOW << (*it).second << CRESETB << " pts)";
 			else
 				std::cout << "          | " << (*it).first;
 
-			std::cout << " | " << tournament->findPlayer((*it).first)->getNbOfMatchesWon(tournament) << " matchs gagnés.\n";
+			std::cout << " | " << CYELLOW << tournament->findPlayer((*it).first, true)->getNbOfMatchesWon(tournament) << CRESETB << " match(s) gagnés.\n";
 		}
 		std::cout << "          |\n";
 	}
@@ -116,11 +116,11 @@ static void	printPosition(Tournament* tournament, int position, std::vector< std
 		std::cout << "‾‾‾‾‾|‾‾‾‾\n";
 		for (it = playerList.begin(); it != playerList.end(); it++) {
 			if (it == playerList.begin())
-				std::cout << " 3rd | " << (*it).first << " (" << (*it).second << " pts)";
+				std::cout << CYELLOW << " 3rd" << CRESETB << " | " << (*it).first << " (" << CYELLOW << (*it).second << CRESETB << " pts)";
 			else
 				std::cout << "     | " << (*it).first;
 
-			std::cout << " | " << tournament->findPlayer((*it).first)->getNbOfMatchesWon(tournament) << " matchs gagnés.\n";
+			std::cout << " | " << CYELLOW << tournament->findPlayer((*it).first, true)->getNbOfMatchesWon(tournament) << CRESETB << " match(s) gagnés.\n";
 		}
 		std::cout << "     |\n";
 		std::cout << "‾‾‾‾‾" << std::endl;
@@ -128,11 +128,11 @@ static void	printPosition(Tournament* tournament, int position, std::vector< std
 	else {
 		for (it = playerList.begin(); it != playerList.end(); it++) {
 			if (it == playerList.begin())
-				std::cout << '(' << position << ") " << (*it).first << " | " << (*it).second << "pts";
+				std::cout << '(' << CYELLOW << position << CRESETB << ") " << (*it).first << " | " << CYELLOW << (*it).second << CRESETB << " pts";
 			else
-				std::cout << ((position > 10) ? "(**) " : "(*) ") << (*it).first;
+				std::cout << ((position > 10) ? "(**) " : "(*) ") << (*it).first << " | " << CYELLOW << "^^^^^^" << CRESETB;
 
-			std::cout << " | " << tournament->findPlayer((*it).first)->getNbOfMatchesWon(tournament) << " matchs gagnés." << std::endl;
+			std::cout << " | " << tournament->findPlayer((*it).first, true)->getNbOfMatchesWon(tournament) << " match(s) gagnés." << std::endl;
 		}
 	}
 }

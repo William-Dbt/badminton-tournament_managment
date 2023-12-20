@@ -5,6 +5,20 @@
 void	startMatch(Tournament* tournament);
 bool	isValidName(std::string name, bool ignoreMinus);
 
+static void	checkPlayerStatus(Tournament* tournament) {
+	std::map<const std::string, Player*>::iterator	it;
+
+	for (it = tournament->getPlayersList().begin(); it != tournament->getPlayersList().end(); it++) {
+		if ((*it).second->getStatus() == FINISHED 
+			&&(*it).second->getNbOfMatches() < (int)(tournament->getNumberOfPlayers() - 1))
+		{
+			std::cout << CBOLD << "Le joueur " << CYELLOW << (*it).second->getName() << CRESETB;
+			std::cout << " retourne dans le tournoi à la suite de l'ajout d'un joueur!" << std::endl;
+			tournament->addPlayerToWaitingQueue((*it).second);
+		}
+	}
+}
+
 static void	addPlayer(Tournament* tournament) {
 	Player*		player;
 	std::string	buffer;
@@ -33,8 +47,12 @@ static void	addPlayer(Tournament* tournament) {
 	if (!player)
 		tournament->addPlayer(buffer);
 
-	if (!player && tournament->findPlayer(buffer) != NULL)
-		printMessage("Le joueur " + buffer + "a bien été ajouté au tournoi!");
+	if (!player && tournament->findPlayer(buffer) != NULL) {
+		printMessage("Le joueur " + buffer + " a bien été ajouté au tournoi!");
+		checkPlayerStatus(tournament);
+	}
+	else
+		return (printMessage("Le joueur n'a pas pu être ajouté au tournoi.", ERROR));
 
 	if (tournament->getNumberOfWaitingPlayers() >= 2
 		&& tournament->getNumberOfPlayingMatches() < tournament->getNumberOfCourts()) {
