@@ -2,9 +2,10 @@
 
 ## Objectives
 
-This program is used to manage a badminton tournament. It automatize the choice of the matches that players have to do.  
-For the moment the program take only one mode, the ALL vs ALL mode, all players have to play against the other ones.  
-A history is managed automatically by the program, once the FINISH command is called, the program will save the logs of the tournament in a file that can be used to start it (it's the first question asked when the program is launched).  
+This program is used to manage a badminton tournament. It automatize the choice of the matchs that players have to do.  
+For the moment the program take only one mode, the 'ALL vs ALL' mode, all players have to play against the other ones.  
+ONLY FOR SIMPLES MATCHS : A history is managed automatically by the program, once the FINISH command is called, the program will save the logs of the tournament in a file that can be used to start it (it's the first question asked when the program is launched).  
+When the 'FINISH' command is called, scores of players are shown and sorted by their positions.  
 
 ## Usage
 
@@ -14,7 +15,7 @@ A history is managed automatically by the program, once the FINISH command is ca
 
 **Execute**: `./tournament`  
 
-The program is interactive, it will first ask you the list of players and the number of courts to start the matches.  
+The program is interactive, it will first ask you the list of players and the number of courts to start the matchs.  
 Once the tournament is started, you can do some actions on it as:  
 - **MATCH**, it will start a match or finish one, the program ask for name of a player in active match, if no one is started it will try to start one.  
 - **INFOS**, it shows the matches in progress and the players waiting list.  
